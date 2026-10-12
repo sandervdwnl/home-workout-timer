@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#020617" />
+    <meta name="description" content="Bouw je workout met blokken en train met bel en afcount." />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Workout Timer</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      :root {
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        color: #f1f5f9;
+        background: #020617;
+      }
+      body { min-height: 100vh; }
+      button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; -webkit-tap-highlight-color: transparent; }
+      input { font: inherit; }
+      .wrap { max-width: 520px; margin: 0 auto; padding: 16px; }
+      .head { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; margin: 16px 0 20px; }
+      h1 { font-size: 24px; }
+      .sub { color: #94a3b8; font-size: 13px; margin-top: 2px; }
+      .btn { display: inline-flex; align-items: center; gap: 6px; background: #34d399; color: #020617; font-weight: 700; padding: 10px 14px; border-radius: 12px; }
+      .btn:disabled { opacity: .3; }
+      .btn svg { width: 15px; height: 15px; }
+      .wcard { display: flex; align-items: center; gap: 8px; background: #1e293bb3; border: 1px solid #334155; border-radius: 16px; padding: 14px; margin-bottom: 12px; }
+      .wname { flex: 1; min-width: 0; text-align: left; }
+      .wname .t { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+      .wname .meta { color: #94a3b8; font-size: 12px; margin-top: 3px; }
+      .playbtn { background: #34d399; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; color: #020617; flex-shrink: 0; }
+      .playbtn svg { width: 20px; height: 20px; }
+      .ibtn { padding: 8px; border-radius: 10px; color: #94a3b8; display: inline-flex; }
+      .ibtn:hover { background: #334155; color: #f1f5f9; }
+      .ibtn:disabled { opacity: .25; }
+      .ibtn svg { width: 16px; height: 16px; display: block; }
+      .empty { border: 1px dashed #334155; border-radius: 12px; padding: 24px; text-align: center; color: #94a3b8; font-size: 14px; }
+      .topbar { position: sticky; top: 0; z-index: 5; background: rgba(2, 6, 23, .95); backdrop-filter: blur(8px); border-bottom: 1px solid #1e293b; }
+      .topbar .in { max-width: 520px; margin: 0 auto; display: flex; align-items: center; gap: 8px; padding: 10px 12px; }
+      .winput { flex: 1; min-width: 0; background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 9px 12px; font-weight: 600; color: #f1f5f9; outline: none; }
+      .winput:focus { border-color: #34d399; }
+      .stats { display: flex; justify-content: space-between; gap: 8px; background: rgba(30, 41, 59, .6); border-radius: 12px; padding: 8px 12px; font-size: 12px; color: #cbd5e1; margin-bottom: 14px; }
+      .stats b { color: #6ee7b7; font-variant-numeric: tabular-nums; }
+      .stats .r { color: #94a3b8; text-align: right; }
+      .block { border-radius: 16px; border: 1px solid #334155; background: rgba(30, 41, 59, .7); padding: 12px; margin-bottom: 12px; }
+      .block.round { border-color: rgba(99, 102, 241, .6); background: rgba(30, 27, 75, .4); }
+      .block.pause { border-color: rgba(245, 158, 11, .6); background: rgba(69, 26, 3, .4); }
+      .block.over { outline: 2px solid #34d399; }
+      .card-top { display: flex; align-items: center; gap: 8px; }
+      .grip { cursor: grab; padding: 4px; color: #64748b; font-size: 20px; line-height: 1; }
+      .badge { font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; padding: 4px 8px; border-radius: 6px; flex-shrink: 0; }
+      .badge.ex { background: rgba(52, 211, 153, .2); color: #6ee7b7; }
+      .badge.rd { background: rgba(99, 102, 241, .3); color: #a5b4fc; }
+      .badge.pz { background: rgba(245, 158, 11, .2); color: #fcd34d; }
+      .bname { flex: 1; min-width: 0; background: #0f172a; border: 1px solid #475569; border-radius: 10px; padding: 8px; color: #f1f5f9; outline: none; font-size: 14px; }
+      .bname:focus { border-color: #34d399; }
+      .card-bot { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px; margin-top: 10px; padding-left: 34px; }
+      .fields { display: flex; flex-wrap: wrap; gap: 12px; }
+      .field { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+      .flabel { font-size: 10px; color: #94a3b8; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; }
+      .stepper { display: flex; gap: 4px; }
+      .stepper button { width: 44px; height: 44px; background: #334155; border-radius: 10px; font-size: 20px; font-weight: 800; color: #f1f5f9; user-select: none; touch-action: manipulation; }
+      .stepper button:active { background: #475569; }
+      .stepper input { width: 48px; height: 44px; background: #0f172a; border: 1px solid #475569; border-radius: 10px; text-align: center; font-size: 17px; font-weight: 800; color: #f1f5f9; outline: none; -moz-appearance: textfield; }
+      .stepper input::-webkit-inner-spin-button, .stepper input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+      .moves { display: flex; gap: 4px; padding-bottom: 4px; }
+      .moves .ibtn { padding: 10px; }
+      .adds { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 4px; }
+      .add { border: 1px dashed; border-radius: 12px; padding: 12px; font-weight: 600; font-size: 14px; display: flex; justify-content: center; align-items: center; gap: 6px; }
+      .add.ex { border-color: rgba(52, 211, 153, .6); color: #6ee7b7; }
+      .add.rd { border-color: rgba(129, 140, 248, .6); color: #a5b4fc; }
+      .add.pz { border-color: rgba(245, 158, 11, .6); color: #fcd34d; }
+      .add svg { width: 14px; height: 14px; }
+      .hint { background: rgba(30, 41, 59, .4); border-radius: 12px; padding: 12px; font-size: 12px; line-height: 1.6; color: #94a3b8; margin-top: 14px; }
+      .hint b { color: #e2e8f0; }
+      .player { display: flex; flex-direction: column; min-height: 100vh; }
+      .phead { display: flex; align-items: center; gap: 10px; padding: 12px; max-width: 520px; margin: 0 auto; width: 100%; }
+      .phead .t { flex: 1; min-width: 0; }
+      .phead .wn { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .roundbadge { font-size: 12px; color: #a5b4fc; }
+      .tt { font-size: 12px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+      .pmid { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; padding: 0 20px; }
+      .ringwrap { position: relative; width: 224px; height: 224px; }
+      .ringwrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+      .rem { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 54px; font-weight: 800; font-variant-numeric: tabular-nums; }
+      .cur { font-size: 26px; font-weight: 800; text-align: center; }
+      .subtxt { color: #94a3b8; font-size: 14px; margin-top: 4px; }
+      .next { font-size: 14px; color: #cbd5e1; margin-top: 12px; text-align: center; }
+      .next b { color: #6ee7b7; }
+      .pbar { padding: 0 24px; max-width: 520px; margin: 0 auto; width: 100%; }
+      .pbar .track { height: 6px; background: #1e293b; border-radius: 99px; overflow: hidden; }
+      .pbar .fill { height: 100%; background: #34d399; border-radius: 99px; width: 0%; }
+      .ctrls { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 24px; }
+      .cbtn { background: #1e293b; color: #cbd5e1; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+      .cbtn.md { width: 56px; height: 56px; }
+      .cbtn.md svg { width: 24px; height: 24px; }
+      .cbtn.big { width: 76px; height: 76px; background: #34d399; color: #020617; }
+      .cbtn.big svg { width: 32px; height: 32px; }
+      .done { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; text-align: center; padding: 24px; min-height: 100vh; }
+      .done h2 { font-size: 30px; }
+      .done .emoji { font-size: 56px; }
+      .done .meta { color: #94a3b8; }
+      .done .row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+      .ghost { background: #1e293b; color: #e2e8f0; border-radius: 12px; padding: 12px 20px; font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <noscript>Zet JavaScript aan om de Workout Timer te gebruiken.</noscript>
+    <script>
+      (function () {
+        "use strict";
+
+        /* ---------- helpers ---------- */
+        var KEY = "homeWorkoutTimer.pwa.v1";
+        function uid() { return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4); }
+        function fmt(s) { var t = Math.round(Math.max(0, s)); return Math.floor(t / 60) + ":" + String(t % 60).padStart(2, "0"); }
+        function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+
+        var IC = {
+          play: "M8 5v14l11-7z",
+          pause: "M7 5h4v14H7zM13 5h4v14h-4z",
+          skip: "M6 5v14l8-7zM15 5h3v14h-3z",
+          x: "M18 6L6 18M6 6l12 12",
+          plus: "M12 5v14M5 12h14",
+          up: "M12 19V5M5 12l7-7 7 7",
+          down: "M12 5v14M5 12l7 7 7-7",
+          trash: "M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14",
+          copy: "M9 9h11v11H9zM5 15V4h11",
+          back: "M19 12H5M12 19l-7-7 7-7",
+          pencil: "M16 4l4 4L8 20H4v-4L16 4z"
+        };
+        function svgF(d, c) { return '<svg class="' + (c || "") + '" viewBox="0 0 24 24" fill="currentColor"><path d="' + d + '"/></svg>'; }
+        function svgS(d, c) { return '<svg class="' + (c || "") + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="' + d + '"/></svg>'; }
+
+        /* ---------- data ---------- */
+        function seeds() {
+          return [
+            {
+              id: uid(), name: "Full Body HIIT",
+              blocks: [
+                { id: uid(), kind: "round", name: "Ronde", reps: 3, rest: 30 },
+                { id: uid(), kind: "exercise", name: "Jumping jacks", active: 40, rest: 10 },
+                { id: uid(), kind: "exercise", name: "Push-ups", active: 30, rest: 15 },
+                { id: uid(), kind: "exercise", name: "Squats", active: 40, rest: 15 },
+                { id: uid(), kind: "exercise", name: "Plank", active: 45, rest: 0 }
+              ]
+            },
+            {
+              id: uid(), name: "Tabata Quickie",
+              blocks: [
+                { id: uid(), kind: "round", name: "Tabata", reps: 4, rest: 20 },
+                { id: uid(), kind: "exercise", name: "Burpees", active: 20, rest: 10 },
+                { id: uid(), kind: "exercise", name: "High knees", active: 20, rest: 10 }
+              ]
+            },
+            {
+              id: uid(), name: "25-min Low Impact (yoga mat)",
+              blocks: [
+                { id: uid(), kind: "round", name: "Warm-up", reps: 1, rest: 0 },
+                { id: uid(), kind: "exercise", name: "March in place + arm swings", active: 60, rest: 0 },
+                { id: uid(), kind: "exercise", name: "Cat-cow + hip circles", active: 60, rest: 0 },
+                { id: uid(), kind: "exercise", name: "Shoulder pull-aparts (loop band)", active: 60, rest: 0 },
+                { id: uid(), kind: "round", name: "Conditioning", reps: 2, rest: 60 },
+                { id: uid(), kind: "exercise", name: "Side-step jacks (band enkels)", active: 40, rest: 20 },
+                { id: uid(), kind: "exercise", name: "Squat + overhead press (lange band)", active: 40, rest: 20 },
+                { id: uid(), kind: "exercise", name: "High-knee marches", active: 40, rest: 20 },
+                { id: uid(), kind: "exercise", name: "Seated row sprint (lange band)", active: 40, rest: 20 },
+                { id: uid(), kind: "pause", name: "Voorbereiding Strength", seconds: 30 },
+                { id: uid(), kind: "round", name: "Strength", reps: 2, rest: 20 },
+                { id: uid(), kind: "exercise", name: "Goblet squat (duikgewicht)", active: 45, rest: 15 },
+                { id: uid(), kind: "exercise", name: "Glute bridge (gewicht op heupen)", active: 45, rest: 15 },
+                { id: uid(), kind: "exercise", name: "Seated band row", active: 45, rest: 15 },
+                { id: uid(), kind: "exercise", name: "Lateral walks (loop band)", active: 45, rest: 15 },
+                { id: uid(), kind: "round", name: "Core finisher", reps: 1, rest: 0 },
+                { id: uid(), kind: "exercise", name: "Plank + shoulder taps", active: 45, rest: 10 },
+                { id: uid(), kind: "exercise", name: "Dead bug", active: 45, rest: 0 },
+                { id: uid(), kind: "round", name: "Cooldown", reps: 1, rest: 0 },
+                { id: uid(), kind: "exercise", name: "Hamstring/hip/chest stretch + diep ademen", active: 120, rest: 0 }
+              ]
+            }
+          ];
+        }
+
+        function buildSegments(blocks) {
+          var out = [];
+          var i = 0;
+          while (i < blocks.length) {
+            var b = blocks[i];
+            if (b.kind === "round") {
+              var group = [];
+              var j = i + 1;
+              while (j < blocks.length && blocks[j].kind === "exercise") { group.push(blocks[j]); j++; }
+              var inner = buildSegments(group);
+              var reps = Math.max(1, b.reps);
+              for (var r = 1; r <= reps; r++) {
+                for (var k = 0; k < inner.length; k++) {
+                  out.push(Object.assign({}, inner[k], { round: r, rounds: reps }));
+                }
+                if (r < reps && b.rest > 0) {
+                  out.push({ kind: "roundRest", label: b.name + " — pauze", seconds: b.rest, round: r, rounds: reps });
+                }
+              }
+              i = j;
+            } else if (b.kind === "pause") {
+              out.push({ kind: "rest", label: b.name || "Pauze", seconds: Math.max(1, b.seconds) });
+              i++;
+            } else {
+              out.push({ kind: "active", label: b.name || "Oefening", seconds: Math.max(1, b.active) });
+              if (b.rest > 0) out.push({ kind: "rest", label: "Pauze", seconds: b.rest });
+              i++;
+            }
+          }
+          return out;
+        }
+
+        /* ---------- sound ---------- */
+        var actx = null;
+        function getCtx() {
+          if (!actx) {
+            try {
+              var AC = window.AudioContext || window.webkitAudioContext;
+              if (AC) actx = new AC();
+            } catch (e) {}
+          }
+          return actx;
+        }
+        function tone(freq, delay, dur, gain) {
+          var c = getCtx();
+          if (!c) return;
+          try {
+            if (c.state === "suspended") c.resume();
+            var t = c.currentTime + delay;
+            var o = c.createOscillator();
+            var g = c.createGain();
+            o.type = "sine";
+            o.frequency.value = freq;
+            g.gain.setValueAtTime(gain || 0.22, t);
+            g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+            o.connect(g);
+            g.connect(c.destination);
+            o.start(t);
+            o.stop(t + dur + 0.05);
+          } catch (e) {}
+        }
+        function bell() { tone(880, 0, 0.3); tone(1318, 0.03, 0.4, 0.15); }
+        function tick() { tone(1500, 0, 0.08, 0.16); }
+        function endBell() { tone(660, 0, 0.25); tone(660, 0.3, 0.25); tone(990, 0.6, 0.6); }
+
+        /* ---------- state ---------- */
+        var workouts = (function () {
+          try {
+            var raw = localStorage.getItem(KEY);
+            if (raw) return JSON.parse(raw);
+          } catch (e) {}
+          return seeds();
+        })();
+        var view = { name: "list" };
+
+        function save() { try { localStorage.setItem(KEY, JSON.stringify(workouts)); } catch (e) {} }
+        function findW(id) { for (var i = 0; i < workouts.length; i++) if (workouts[i].id === id) return workouts[i]; return null; }
+        function findBlock(id) {
+          var w = findW(view.id);
+          if (!w) return null;
+          for (var i = 0; i < w.blocks.length; i++) if (w.blocks[i].id === id) return w.blocks[i];
+          return null;
+        }
+
+        var P = {
+          segs: [], totalSec: 0, idx: 0, running: false, finished: false,
+          elapsedRef: 0, startAt: 0, lastTick: null, timer: null, lock: null, dragId: null
+        };
+
+        var app = document.getElementById("app");
+
+        /* ---------- silent updates (no re-render, keeps input focus) ---------- */
+        function silentBlock(id, patch) {
+          var b = findBlock(id);
+          if (!b) return;
+          Object.assign(b, patch);
+          save();
+          syncNums();
+          updateStats();
+        }
+        function syncNums() {
+          var els = document.querySelectorAll("[data-num]");
+          for (var i = 0; i < els.length; i++) {
+            var parts = els[i].getAttribute("data-num").split(":");
+            var b = findBlock(parts[0]);
+            if (b) els[i].value = b[parts[1]];
+          }
+        }
+        function updateStats() {
+          var w = findW(view.id);
+          if (!w) return;
+          var segs = buildSegments(w.blocks);
+          var total = 0;
+          for (var i = 0; i < segs.length; i++) total += segs[i].seconds;
+          var t = document.getElementById("statTot");
+          if (t) t.textContent = fmt(total);
+          var c = document.getElementById("statSeg");
+          if (c) c.textContent = segs.length;
+          var sb = document.getElementById("startBtn");
+          if (sb) sb.disabled = segs.length === 0;
+        }
+
+        /* ---------- stepper hold ---------- */
+        var holdT = null, repT = null;
+        function stepStop() {
+          if (holdT) { clearTimeout(holdT); holdT = null; }
+          if (repT) { clearInterval(repT); repT = null; }
+        }
+        function stepStart(id, field, delta) {
+          stepStop();
+          var doStep = function () {
+            var b = findBlock(id);
+            if (!b) return;
+            var v = Math.max(0, (b[field] || 0) + delta);
+            silentBlock(id, { [field]: v });
+          };
+          doStep();
+          holdT = setTimeout(function () { repT = setInterval(doStep, 100); }, 400);
+        }
+
+        /* ---------- wake lock ---------- */
+        function acquireLock() {
+          try {
+            if ("wakeLock" in navigator) {
+              navigator.wakeLock.request("screen").then(function (l) { P.lock = l; }).catch(function () {});
+            }
+          } catch (e) {}
+        }
+        function releaseLock() {
+          try { if (P.lock) P.lock.release(); } catch (e) {}
+          P.lock = null;
+        }
+
+        /* ---------- player ---------- */
+        function startTimer() { stopTimer(); P.timer = setInterval(onTick, 100); }
+        function stopTimer() { if (P.timer) { clearInterval(P.timer); P.timer = null; } }
+
+        function onTick() {
+          var seg = P.segs[P.idx];
+          if (!seg) return;
+          var el = P.elapsedRef + (Date.now() - P.startAt);
+          var remMs = seg.seconds * 1000 - el;
+          if (remMs > 0) {
+            paintTick(remMs);
+            var secLeft = Math.ceil(remMs / 1000);
+            if (secLeft <= 3 && secLeft >= 1 && P.lastTick !== secLeft) { P.lastTick = secLeft; tick(); }
+          } else {
+            advance();
+          }
+        }
+
+        function advance() {
+          P.lastTick = null;
+          P.elapsedRef = 0;
+          if (P.idx >= P.segs.length - 1) {
+            stopTimer();
+            P.running = false;
+            P.finished = true;
+            releaseLock();
+            endBell();
+            render();
+          } else {
+            P.idx++;
+            P.startAt = Date.now();
+            bell();
+            render();
+          }
+        }
+
+        function paintTick(remMs) {
+          var seg = P.segs[P.idx];
+          var segMs = seg.seconds * 1000;
+          var el = segMs - remMs;
+          var rem = document.getElementById("rem");
+          if (!rem) return;
+          rem.textContent = fmt(Math.ceil(remMs / 1000));
+          var ring = document.getElementById("ringFg");
+          if (ring) ring.style.strokeDashoffset = String(552.92 * (remMs / segMs));
+          var doneSec = 0;
+          for (var i = 0; i < P.idx; i++) doneSec += P.segs[i].seconds;
+          var overall = (doneSec * 1000 + el) / (P.totalSec * 1000 || 1);
+          var bar = document.getElementById("bar");
+          if (bar) bar.style.width = (overall * 100).toFixed(1) + "%";
+          var tt = document.getElementById("tt");
+          if (tt) tt.textContent = fmt(doneSec + el / 1000) + " / " + fmt(P.totalSec);
+        }
+
+        function nextActiveAfter(idx) {
+          for (var j = idx + 1; j < P.segs.length; j++) {
+            if (P.segs[j].kind === "active") return P.segs[j];
+          }
+          return null;
+        }
+
+        /* ---------- renders ---------- */
+        function render() {
+          stepStop();
+          if (view.name === "list") renderList();
+          else if (view.name === "edit") renderEditor();
+          else renderPlayer();
+        }
+
+        function renderList() {
+          var html = '<div class="wrap"><div class="head"><div><h1>&#128170; Workout Timer</h1><div class="sub">Bouw je workout, doe hem met bel &amp; afcount.</div></div>' +
+            '<button class="btn" onclick="App.create()">' + svgS(IC.plus) + ' Nieuwe workout</button></div>';
+          if (workouts.length === 0) {
+            html += '<p class="empty">Nog geen workouts. Maak er &eacute;&eacute;n aan om te beginnen.</p>';
+          }
+          for (var i = 0; i < workouts.length; i++) {
+            var w = workouts[i];
+            var segs = buildSegments(w.blocks);
+            var total = 0;
+            for (var k = 0; k < segs.length; k++) total += segs[k].seconds;
+            var ex = 0, rd = 0;
+            for (var n = 0; n < w.blocks.length; n++) {
+              if (w.blocks[n].kind === "exercise") ex++;
+              else if (w.blocks[n].kind === "round") rd++;
+            }
+            html += '<div class="wcard">' +
+              '<button class="playbtn" onclick="App.play(\'' + w.id + '\')" title="Starten">' + svgF(IC.play) + '</button>' +
+              '<button class="wname" onclick="App.edit(\'' + w.id + '\')">' +
+                '<div class="t">' + esc(w.name) + '</div>' +
+                '<div class="meta">' + ex + ' oefeningen' + (rd > 0 ? " &middot; " + rd + " ronde" + (rd > 1 ? "n" : "") : "") + " &middot; &#9201; " + fmt(total) + '</div>' +
+              '</button>' +
+              '<button class="ibtn" title="Bewerken" onclick="App.edit(\'' + w.id + '\')">' + svgS(IC.pencil) + '</button>' +
+              '<button class="ibtn" title="Dupliceren" onclick="App.dup(\'' + w.id + '\')">' + svgS(IC.copy) + '</button>' +
+              '<button class="ibtn" title="Verwijderen" onclick="App.del(\'' + w.id + '\')">' + svgS(IC.trash) + '</button>' +
+              '</div>';
+          }
+          html += "</div>";
+          app.innerHTML = html;
+        }
+
+        function fieldHtml(id, label, field, step) {
+          var b = findBlock(id);
+          var v = b ? (b[field] || 0) : 0;
+          return '<div class="field"><span class="flabel">' + label + '</span><div class="stepper">' +
+            '<button onpointerdown="App.stepStart(\'' + id + '\',\'' + field + '\',' + (-step) + ')" onpointerup="App.stepStop()" onpointerleave="App.stepStop()" onpointercancel="App.stepStop()">&minus;</button>' +
+            '<input data-num="' + id + ":" + field + '" type="number" min="0" inputmode="numeric" value="' + v + '" oninput="App.setNum(\'' + id + '\',\'' + field + '\',this.value)">' +
+            '<button onpointerdown="App.stepStart(\'' + id + '\',\'' + field + '\',' + step + ')" onpointerup="App.stepStop()" onpointerleave="App.stepStop()" onpointercancel="App.stepStop()">+</button>' +
+            "</div></div>";
+        }
+
+        function renderEditor() {
+          var w = findW(view.id);
+          if (!w) { view = { name: "list" }; renderList(); return; }
+          var segs = buildSegments(w.blocks);
+          var total = 0;
+          for (var k = 0; k < segs.length; k++) total += segs[k].seconds;
+
+          var html = '<div class="topbar"><div class="in">' +
+            '<button class="ibtn" title="Terug" onclick="App.back()">' + svgS(IC.back) + '</button>' +
+            '<input class="winput" value="' + esc(w.name) + '" oninput="App.rename(this.value)" />' +
+            '<button class="btn" id="startBtn" ' + (segs.length === 0 ? "disabled" : "") + ' onclick="App.startWorkout()">' + svgF(IC.play) + ' Start</button>' +
+            "</div></div><div class=\"wrap\">" +
+            '<div class="stats"><span>&#9201; totaal <b id="statTot">' + fmt(total) + "</b> &middot; <span id=\"statSeg\">" + segs.length + '</span> segmenten</span><span class="r">sleep de greep om te sorteren</span></div>';
+
+          for (var i = 0; i < w.blocks.length; i++) {
+            var b = w.blocks[i];
+            var isRound = b.kind === "round";
+            var isPause = b.kind === "pause";
+            var cls = isRound ? "round" : isPause ? "pause" : "";
+            var badge = isRound ? "Ronde &times;" : isPause ? "Pauze" : "Oefening";
+            var bcls = isRound ? "rd" : isPause ? "pz" : "ex";
+            html += '<div class="block ' + cls + '" ondragover="App.dragOver(event)" ondrop="App.dropOn(\'' + b.id + '\')">' +
+              '<div class="card-top">' +
+              '<div class="grip" draggable="true" ondragstart="App.dragStart(\'' + b.id + '\',event)" ondragend="App.dragEnd()" title="Slepen om te verplaatsen">&#10278;</div>' +
+              '<span class="badge ' + bcls + '">' + badge + "</span>" +
+              '<input class="bname" value="' + esc(b.name) + '" oninput="App.setName(\'' + b.id + '\',this.value)" />' +
+              '<button class="ibtn" title="Verwijderen" onclick="App.delBlock(\'' + b.id + '\')">' + svgS(IC.trash) + "</button>" +
+              "</div>" +
+              '<div class="card-bot"><div class="fields">';
+            if (isRound) {
+              html += fieldHtml(b.id, "herhalingen", "reps", 1);
+              html += fieldHtml(b.id, "pauze rondes (s)", "rest", 5);
+            } else if (isPause) {
+              html += fieldHtml(b.id, "pauze (s)", "seconds", 5);
+            } else {
+              html += fieldHtml(b.id, "actief (s)", "active", 5);
+              html += fieldHtml(b.id, "pauze (s)", "rest", 5);
+            }
+            html += "</div>" +
+              '<div class="moves">' +
+              '<button class="ibtn" title="Omhoog" ' + (i === 0 ? "disabled" : "") + ' onclick="App.move(\'' + b.id + '\',-1)">' + svgS(IC.up) + "</button>" +
+              '<button class="ibtn" title="Omlaag" ' + (i === w.blocks.length - 1 ? "disabled" : "") + ' onclick="App.move(\'' + b.id + '\',1)">' + svgS(IC.down) + "</button>" +
+              "</div></div></div>";
+          }
+
+          html += '<div class="adds">' +
+            '<button class="add ex" onclick="App.addExercise()">' + svgS(IC.plus) + ' Oefening</button>' +
+            '<button class="add rd" onclick="App.addRound()">' + svgS(IC.plus) + ' Ronde &times;</button>' +
+            '<button class="add pz" onclick="App.addPause()">' + svgS(IC.plus) + " Pauze</button>" +
+            "</div>" +
+            '<p class="hint"><b>Ronde-blok:</b> herhaalt de oefeningen die eronder staan (tot de volgende ronde, een pauzeblok of het einde) het opgegeven aantal keren, met pauze ertussen. Tip: een ronde met 1 herhaling gebruik je als sectielabel (Warm-up, Cooldown). <b>Pauzeblok:</b> &eacute;&eacute;n keer een pauze &mdash; sluit de ronde erboven af, ideaal als voorbereidingstijd v&oacute;&oacute;r de volgende sectie. Tijdens de training hoor je een bel bij elke wissel en piepjes bij de laatste 3 seconden.</p></div>';
+          app.innerHTML = html;
+        }
+
+        function renderPlayer() {
+          var w = findW(view.id);
+          if (!w || P.segs.length === 0) {
+            app.innerHTML = '<div class="done"><p class="subtxt">Deze workout heeft nog geen oefeningen.</p><button class="ghost" onclick="App.stop()">Terug naar editor</button></div>';
+            return;
+          }
+          if (P.finished) {
+            app.innerHTML = '<div class="done"><div class="emoji">&#127881;</div><h2>Klaar!</h2>' +
+              '<p class="meta">' + esc(w.name) + " &middot; " + fmt(P.totalSec) + " volbracht</p>" +
+              '<div class="row"><button class="btn" onclick="App.restart()">' + svgF(IC.play) + ' Nog een keer</button>' +
+              '<button class="ghost" onclick="App.stop()">Terug naar editor</button></div></div>';
+            return;
+          }
+          var seg = P.segs[P.idx];
+          var isPause = seg.kind !== "active";
+          var color = isPause ? "#fbbf24" : "#34d399";
+          var next = nextActiveAfter(P.idx);
+          var nextHtml = next
+            ? "Hierna: <b>" + esc(next.label) + "</b> &middot; " + fmt(next.seconds)
+            : '<span class="subtxt">Laatste blok &mdash; bijna klaar!</span>';
+
+          var html = '<div class="player"><div class="phead"><div class="t">' +
+            '<div class="wn">' + esc(w.name) + "</div>" +
+            (seg.round != null && seg.rounds > 1 ? '<div class="roundbadge">Ronde ' + seg.round + "/" + seg.rounds + "</div>" : "") +
+            '</div><div class="tt" id="tt"></div></div>' +
+            '<div class="pmid"><div class="ringwrap">' +
+            '<svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="88" fill="none" stroke="#1e293b" stroke-width="10"/>' +
+            '<circle id="ringFg" cx="100" cy="100" r="88" fill="none" stroke="' + color + '" stroke-width="10" stroke-linecap="round" stroke-dasharray="552.92" stroke-dashoffset="0"/></svg>' +
+            '<div class="rem" id="rem" style="color:' + color + '">' + fmt(seg.seconds) + "</div></div>" +
+            "<div><div class=\"cur\" style=\"color:" + color + '">' + esc(seg.label) + "</div>" +
+            (isPause && seg.label === "Pauze" ? '<div class="subtxt">Even op adem komen&hellip;</div>' : "") +
+            '<div class="next">' + nextHtml + "</div></div></div>" +
+            '<div class="pbar"><div class="track"><div class="fill" id="bar"></div></div></div>' +
+            '<div class="ctrls">' +
+            '<button class="cbtn md" title="Stoppen" onclick="App.stop()">' + svgS(IC.x) + "</button>" +
+            '<button class="cbtn big" title="' + (P.running ? "Pauze" : "Start") + '" onclick="App.toggle()">' + (P.running ? svgF(IC.pause) : svgF(IC.play)) + "</button>" +
+            '<button class="cbtn md" title="Volgende blok" onclick="App.skip()">' + svgF(IC.skip) + "</button>" +
+            "</div></div>";
+          app.innerHTML = html;
+          var el = P.elapsedRef + (P.running ? Date.now() - P.startAt : 0);
+          paintTick(Math.max(50, seg.seconds * 1000 - el));
+        }
+
+        /* ---------- actions ---------- */
+        var App = {
+          edit: function (id) { view = { name: "edit", id: id }; render(); },
+          back: function () { view = { name: "list" }; render(); },
+          create: function () {
+            var w = {
+              id: uid(),
+              name: "Nieuwe workout",
+              blocks: [{ id: uid(), kind: "exercise", name: "Oefening 1", active: 40, rest: 20 }]
+            };
+            workouts.unshift(w);
+            save();
+            view = { name: "edit", id: w.id };
+            render();
+          },
+          dup: function (id) {
+            var src = findW(id);
+            if (!src) return;
+            var copy = { id: uid(), name: src.name + " (kopie)", blocks: src.blocks.map(function (b) { return Object.assign({}, b, { id: uid() }); }) };
+            workouts.unshift(copy);
+            save();
+            render();
+          },
+          del: function (id) {
+            workouts = workouts.filter(function (w) { return w.id !== id; });
+            save();
+            render();
+          },
+          rename: function (v) { var w = findW(view.id); if (w) { w.name = v; save(); } },
+          setName: function (id, v) { silentBlock(id, { name: v }); },
+          setNum: function (id, field, v) { silentBlock(id, { [field]: Math.max(0, parseInt(v) || 0) }); },
+          stepStart: stepStart,
+          stepStop: stepStop,
+          move: function (id, dir) {
+            var w = findW(view.id);
+            if (!w) return;
+            var from = -1;
+            for (var i = 0; i < w.blocks.length; i++) if (w.blocks[i].id === id) from = i;
+            var to = from + dir;
+            if (from < 0 || to < 0 || to >= w.blocks.length) return;
+            var m = w.blocks.splice(from, 1)[0];
+            w.blocks.splice(to, 0, m);
+            save();
+            render();
+          },
+          delBlock: function (id) {
+            var w = findW(view.id);
+            if (!w) return;
+            w.blocks = w.blocks.filter(function (b) { return b.id !== id; });
+            save();
+            render();
+          },
+          addExercise: function () {
+            var w = findW(view.id);
+            if (!w) return;
+            var n = 1;
+            for (var i = 0; i < w.blocks.length; i++) if (w.blocks[i].kind === "exercise") n++;
+            w.blocks.push({ id: uid(), kind: "exercise", name: "Oefening " + n, active: 40, rest: 20 });
+            save();
+            render();
+          },
+          addRound: function () {
+            var w = findW(view.id);
+            if (!w) return;
+            w.blocks.push({ id: uid(), kind: "round", name: "Ronde", reps: 3, rest: 30 });
+            save();
+            render();
+          },
+          addPause: function () {
+            var w = findW(view.id);
+            if (!w) return;
+            w.blocks.push({ id: uid(), kind: "pause", name: "Pauze", seconds: 60 });
+            save();
+            render();
+          },
+          dragStart: function (id, ev) {
+            P.dragId = id;
+            try { if (ev.dataTransfer) ev.dataTransfer.setData("text/plain", id); } catch (e) {}
+          },
+          dragEnd: function () {
+            P.dragId = null;
+            var els = document.querySelectorAll(".block.over");
+            for (var i = 0; i < els.length; i++) els[i].classList.remove("over");
+          },
+          dragOver: function (ev) {
+            ev.preventDefault();
+            var els = document.querySelectorAll(".block.over");
+            for (var i = 0; i < els.length; i++) els[i].classList.remove("over");
+            ev.currentTarget.classList.add("over");
+          },
+          dropOn: function (id) {
+            var from = P.dragId;
+            P.dragId = null;
+            var w = findW(view.id);
+            if (!w) { render(); return; }
+            if (!from || from === id) { render(); return; }
+            var fi = -1, ti = -1;
+            for (var i = 0; i < w.blocks.length; i++) {
+              if (w.blocks[i].id === from) fi = i;
+              if (w.blocks[i].id === id) ti = i;
+            }
+            if (fi < 0 || ti < 0) { render(); return; }
+            var m = w.blocks.splice(fi, 1)[0];
+            w.blocks.splice(ti, 0, m);
+            save();
+            render();
+          },
+          startWorkout: function () { App.play(view.id); },
+          play: function (id) {
+            var w = findW(id);
+            if (!w) return;
+            view = { name: "play", id: id };
+            P.segs = buildSegments(w.blocks);
+            P.totalSec = 0;
+            for (var i = 0; i < P.segs.length; i++) P.totalSec += P.segs[i].seconds;
+            P.idx = 0;
+            P.running = false;
+            P.finished = false;
+            P.elapsedRef = 0;
+            P.lastTick = null;
+            stopTimer();
+            render();
+          },
+          toggle: function () {
+            if (P.finished) return;
+            if (P.running) {
+              P.elapsedRef += Date.now() - P.startAt;
+              stopTimer();
+              P.running = false;
+              render();
+            } else {
+              if (P.elapsedRef === 0) bell();
+              P.startAt = Date.now();
+              P.running = true;
+              startTimer();
+              acquireLock();
+              render();
+            }
+          },
+          skip: function () { advance(); },
+          stop: function () {
+            stopTimer();
+            P.running = false;
+            releaseLock();
+            view = { name: "edit", id: view.id };
+            render();
+          },
+          restart: function () {
+            P.idx = 0;
+            P.finished = false;
+            P.elapsedRef = 0;
+            P.lastTick = null;
+            P.running = false;
+            App.toggle();
+          }
+        };
+        window.App = App;
+
+        render();
+
+        /* ---------- PWA: service worker ---------- */
+        if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+          window.addEventListener("load", function () {
+            navigator.serviceWorker.register("sw.js").catch(function () {});
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
