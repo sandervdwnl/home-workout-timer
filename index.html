@@ -269,7 +269,7 @@
         function tone(freq, delay, dur, gain) {
           var c = getCtx();
           if (!c) return;
-          var v = (gain || 0.22) * settings.volume;
+          var v = (gain || 0.5) * settings.volume;
           if (v <= 0.001) return;
           try {
             if (c.state === "suspended") c.resume();
@@ -289,11 +289,11 @@
         var SOUNDS = {
           bel: { name: "Bel", desc: "heldere dubbelbel", play: function () { tone(880, 0, 0.3); tone(1318, 0.03, 0.4, 0.15); } },
           piep: { name: "Piep", desc: "kort dubbel piepen", play: function () { tone(1000, 0, 0.15, 0.34); tone(1000, 0.22, 0.15, 0.34); } },
-          gong: { name: "Gong", desc: "zachte lage gong", play: function () { tone(523, 0, 0.6, 0.3); tone(392, 0.02, 0.7, 0.22); } }
+          gong: { name: "Beep", desc: "race countdown beep", play: function () { tone(1318, 0, 0.08, 0.5); tone(1568, 0.1, 0.08, 0.5); tone(2093, 0.2, 0.12, 0.5); } }
         };
         function notify() { (SOUNDS[settings.sound] || SOUNDS.bel).play(); }
-        function tick() { tone(1500, 0, 0.08, 0.16); }
-        function endBell() { tone(660, 0, 0.25); tone(660, 0.3, 0.25); tone(990, 0.6, 0.6); }
+        function tick() { tone(1500, 0, 0.08, 0.4); }
+        function endBell() { tone(660, 0, 0.25, 0.5); tone(660, 0.3, 0.25, 0.5); tone(990, 0.6, 0.6, 0.5); }
 
         /* ---------- state ---------- */
         function migrateWorkout(w) {
@@ -654,11 +654,12 @@
             '<span class="volval" id="volVal">' + Math.round(settings.volume * 100) + '%</span>' +
             '<button class="ibtn" title="Luister" onclick="App.testSound()">' + svgF(IC.play) + "</button></div></div>" +
             '<div class="setgroup"><div class="settitle">Meldingsgeluid</div><div class="sopts">';
-          var ids = ["bel", "piep", "gong"];
+          var ids = ["bel", "piep", "beep"];
           for (var i = 0; i < ids.length; i++) {
-            var s = SOUNDS[ids[i]];
-            var sel = settings.sound === ids[i];
-            html += '<button class="sopt' + (sel ? " sel" : "") + '" onclick="App.setSound(\'' + ids[i] + '\')">' +
+            var id = ids[i];
+            var s = SOUNDS[id] || SOUNDS.gong;
+            var sel = settings.sound === id || (id === "beep" && settings.sound === "gong");
+            html += '<button class="sopt' + (sel ? " sel" : "") + '" onclick="App.setSound(\'' + id + '\')">' +
               '<span class="stxt"><span class="sn">' + s.name + '</span><span class="sd">' + s.desc + "</span></span>" +
               (sel ? '<span class="check">&#10003;</span>' : "") + "</button>";
           }
@@ -743,8 +744,8 @@
             if (lab) lab.textContent = Math.round(settings.volume * 100) + "%";
           },
           setSound: function (id) {
-            if (!SOUNDS[id]) return;
-            settings.sound = id;
+            if (!SOUNDS[id] && id !== "beep") return;
+            settings.sound = (id === "beep" ? "gong" : id);
             saveSettings();
             render();
             notify();
