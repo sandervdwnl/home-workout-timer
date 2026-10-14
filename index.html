@@ -19,7 +19,7 @@
       }
       body { min-height: 100vh; }
       button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; -webkit-tap-highlight-color: transparent; }
-      input { font: inherit; }
+      input, textarea { font: inherit; }
       .wrap { max-width: 520px; margin: 0 auto; padding: 16px; }
       .head { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; margin: 16px 0 20px; }
       h1 { font-size: 24px; }
@@ -47,15 +47,13 @@
       .stats .r { color: #94a3b8; text-align: right; }
       .block { border-radius: 16px; border: 1px solid #334155; background: rgba(30, 41, 59, .7); padding: 12px; margin-bottom: 12px; }
       .block.round { border-color: rgba(99, 102, 241, .6); background: rgba(30, 27, 75, .4); }
-      .block.pause { border-color: rgba(245, 158, 11, .6); background: rgba(69, 26, 3, .4); }
       .block.over { outline: 2px solid #34d399; }
       .card-top { display: flex; align-items: center; gap: 8px; }
       .grip { cursor: grab; padding: 4px; color: #64748b; font-size: 20px; line-height: 1; }
       .badge { font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; padding: 4px 8px; border-radius: 6px; flex-shrink: 0; }
       .badge.ex { background: rgba(52, 211, 153, .2); color: #6ee7b7; }
       .badge.rd { background: rgba(99, 102, 241, .3); color: #a5b4fc; }
-      .badge.pz { background: rgba(245, 158, 11, .2); color: #fcd34d; }
-      .bname { flex: 1; min-width: 0; background: #0f172a; border: 1px solid #475569; border-radius: 10px; padding: 8px; color: #f1f5f9; outline: none; font-size: 14px; }
+      .bname { flex: 1; min-width: 0; background: #0f172a; border: 1px solid #475569; border-radius: 10px; padding: 8px; color: #f1f5f9; outline: none; font-size: 14px; resize: none; line-height: 1.4; }
       .bname:focus { border-color: #34d399; }
       .card-bot { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px; margin-top: 10px; padding-left: 34px; }
       .fields { display: flex; flex-wrap: wrap; gap: 12px; }
@@ -68,14 +66,49 @@
       .stepper input::-webkit-inner-spin-button, .stepper input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
       .moves { display: flex; gap: 4px; padding-bottom: 4px; }
       .moves .ibtn { padding: 10px; }
-      .adds { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 4px; }
+      .adds { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
       .add { border: 1px dashed; border-radius: 12px; padding: 12px; font-weight: 600; font-size: 14px; display: flex; justify-content: center; align-items: center; gap: 6px; }
       .add.ex { border-color: rgba(52, 211, 153, .6); color: #6ee7b7; }
       .add.rd { border-color: rgba(129, 140, 248, .6); color: #a5b4fc; }
-      .add.pz { border-color: rgba(245, 158, 11, .6); color: #fcd34d; }
       .add svg { width: 14px; height: 14px; }
       .hint { background: rgba(30, 41, 59, .4); border-radius: 12px; padding: 12px; font-size: 12px; line-height: 1.6; color: #94a3b8; margin-top: 14px; }
       .hint b { color: #e2e8f0; }
+      .pvhead { flex: 1; min-width: 0; }
+      .pvhead .t { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .pvhead .meta { color: #94a3b8; font-size: 12px; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .pv { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+      .pv-round { display: flex; align-items: center; gap: 8px; background: rgba(30, 27, 75, .5); border: 1px solid rgba(99, 102, 241, .6); border-radius: 12px; padding: 10px 12px; margin-top: 6px; }
+      .pv .pv-round:first-child { margin-top: 0; }
+      .pv-round .nm { flex: 1; min-width: 0; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .pv-round .mt { color: #a5b4fc; font-size: 12px; white-space: nowrap; }
+      .pv-row { display: flex; align-items: center; gap: 8px; background: rgba(30, 41, 59, .5); border: 1px solid #334155; border-radius: 12px; padding: 10px 12px; }
+      .pv-row.in { margin-left: 22px; }
+      .pv-row::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #34d399; flex-shrink: 0; }
+      .pv-row .nm { flex: 1; min-width: 0; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .pv-row .mt { color: #94a3b8; font-size: 12px; white-space: nowrap; }
+      .headbtns { display: flex; align-items: center; gap: 6px; }
+      .headbtns .ibtn { padding: 10px; }
+      .setgroup { background: rgba(30, 41, 59, .6); border: 1px solid #334155; border-radius: 16px; padding: 14px; margin-bottom: 14px; }
+      .settitle { font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #94a3b8; margin-bottom: 10px; }
+      .volrow { display: flex; align-items: center; gap: 10px; }
+      .volrow input[type="range"] { flex: 1; accent-color: #34d399; }
+      .volval { width: 44px; text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; color: #6ee7b7; }
+      .sopts { display: flex; flex-direction: column; gap: 8px; }
+      .sopt { display: flex; align-items: center; gap: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 10px 12px; text-align: left; width: 100%; }
+      .sopt .stxt { flex: 1; min-width: 0; }
+      .sopt .sn { display: block; font-weight: 600; }
+      .sopt .sd { display: block; color: #94a3b8; font-size: 12px; margin-top: 2px; }
+      .sopt.sel { border-color: #34d399; background: rgba(52, 211, 153, .12); }
+      .sopt .check { color: #34d399; font-weight: 800; flex-shrink: 0; }
+      .setrow { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 2px; text-align: left; }
+      .setrow + .setrow { border-top: 1px solid #1e293b; }
+      .settxt { flex: 1; min-width: 0; }
+      .settxt .l { font-weight: 600; }
+      .settxt .d { color: #94a3b8; font-size: 12px; margin-top: 2px; line-height: 1.5; }
+      .sw { width: 46px; height: 26px; border-radius: 99px; background: #334155; position: relative; flex-shrink: 0; transition: background .15s; }
+      .sw::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #cbd5e1; transition: transform .15s, background .15s; }
+      .sw.on { background: #34d399; }
+      .sw.on::after { transform: translateX(20px); background: #020617; }
       .player { display: flex; flex-direction: column; min-height: 100vh; }
       .phead { display: flex; align-items: center; gap: 10px; padding: 12px; max-width: 520px; margin: 0 auto; width: 100%; }
       .phead .t { flex: 1; min-width: 0; }
@@ -91,6 +124,8 @@
       .next { font-size: 14px; color: #cbd5e1; margin-top: 12px; text-align: center; }
       .next b { color: #6ee7b7; }
       .pbar { padding: 0 24px; max-width: 520px; margin: 0 auto; width: 100%; }
+      .pinfo { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; min-height: 15px; }
+      .pinfo .tt { margin-left: auto; color: #cbd5e1; }
       .pbar .track { height: 6px; background: #1e293b; border-radius: 99px; overflow: hidden; }
       .pbar .fill { height: 100%; background: #34d399; border-radius: 99px; width: 0%; }
       .ctrls { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 24px; }
@@ -116,6 +151,7 @@
 
         /* ---------- helpers ---------- */
         var KEY = "homeWorkoutTimer.pwa.v1";
+        var SKEY = "homeWorkoutTimer.settings.v1";
         function uid() { return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4); }
         function fmt(s) { var t = Math.round(Math.max(0, s)); return Math.floor(t / 60) + ":" + String(t % 60).padStart(2, "0"); }
         function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
@@ -131,7 +167,9 @@
           trash: "M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14",
           copy: "M9 9h11v11H9zM5 15V4h11",
           back: "M19 12H5M12 19l-7-7 7-7",
-          pencil: "M16 4l4 4L8 20H4v-4L16 4z"
+          pencil: "M16 4l4 4L8 20H4v-4L16 4z",
+          save: "M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2zM12 17a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM7 3v6h8V3z",
+          sliders: "M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"
         };
         function svgF(d, c) { return '<svg class="' + (c || "") + '" viewBox="0 0 24 24" fill="currentColor"><path d="' + d + '"/></svg>'; }
         function svgS(d, c) { return '<svg class="' + (c || "") + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="' + d + '"/></svg>'; }
@@ -169,8 +207,7 @@
                 { id: uid(), kind: "exercise", name: "Squat + overhead press (lange band)", active: 40, rest: 20 },
                 { id: uid(), kind: "exercise", name: "High-knee marches", active: 40, rest: 20 },
                 { id: uid(), kind: "exercise", name: "Seated row sprint (lange band)", active: 40, rest: 20 },
-                { id: uid(), kind: "pause", name: "Voorbereiding Strength", seconds: 30 },
-                { id: uid(), kind: "round", name: "Strength", reps: 2, rest: 20 },
+                { id: uid(), kind: "round", name: "Strength", reps: 2, rest: 20, prep: 30 },
                 { id: uid(), kind: "exercise", name: "Goblet squat (duikgewicht)", active: 45, rest: 15 },
                 { id: uid(), kind: "exercise", name: "Glute bridge (gewicht op heupen)", active: 45, rest: 15 },
                 { id: uid(), kind: "exercise", name: "Seated band row", active: 45, rest: 15 },
@@ -195,8 +232,13 @@
               var j = i + 1;
               while (j < blocks.length && blocks[j].kind === "exercise") { group.push(blocks[j]); j++; }
               var inner = buildSegments(group);
+              i = j;
+              if (inner.length === 0) continue;
               var reps = Math.max(1, b.reps);
               for (var r = 1; r <= reps; r++) {
+                if (b.prep > 0) {
+                  out.push({ kind: "prep", label: b.name + " — voorbereiding", seconds: b.prep, round: r, rounds: reps });
+                }
                 for (var k = 0; k < inner.length; k++) {
                   out.push(Object.assign({}, inner[k], { round: r, rounds: reps }));
                 }
@@ -204,10 +246,6 @@
                   out.push({ kind: "roundRest", label: b.name + " — pauze", seconds: b.rest, round: r, rounds: reps });
                 }
               }
-              i = j;
-            } else if (b.kind === "pause") {
-              out.push({ kind: "rest", label: b.name || "Pauze", seconds: Math.max(1, b.seconds) });
-              i++;
             } else {
               out.push({ kind: "active", label: b.name || "Oefening", seconds: Math.max(1, b.active) });
               if (b.rest > 0) out.push({ kind: "rest", label: "Pauze", seconds: b.rest });
@@ -231,6 +269,8 @@
         function tone(freq, delay, dur, gain) {
           var c = getCtx();
           if (!c) return;
+          var v = (gain || 0.22) * settings.volume;
+          if (v <= 0.001) return;
           try {
             if (c.state === "suspended") c.resume();
             var t = c.currentTime + delay;
@@ -238,7 +278,7 @@
             var g = c.createGain();
             o.type = "sine";
             o.frequency.value = freq;
-            g.gain.setValueAtTime(gain || 0.22, t);
+            g.gain.setValueAtTime(v, t);
             g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
             o.connect(g);
             g.connect(c.destination);
@@ -246,21 +286,76 @@
             o.stop(t + dur + 0.05);
           } catch (e) {}
         }
-        function bell() { tone(880, 0, 0.3); tone(1318, 0.03, 0.4, 0.15); }
+        var SOUNDS = {
+          bel: { name: "Bel", desc: "heldere dubbelbel", play: function () { tone(880, 0, 0.3); tone(1318, 0.03, 0.4, 0.15); } },
+          piep: { name: "Piep", desc: "kort dubbel piepen", play: function () { tone(1000, 0, 0.15, 0.34); tone(1000, 0.22, 0.15, 0.34); } },
+          gong: { name: "Gong", desc: "zachte lage gong", play: function () { tone(523, 0, 0.6, 0.3); tone(392, 0.02, 0.7, 0.22); } }
+        };
+        function notify() { (SOUNDS[settings.sound] || SOUNDS.bel).play(); }
         function tick() { tone(1500, 0, 0.08, 0.16); }
         function endBell() { tone(660, 0, 0.25); tone(660, 0.3, 0.25); tone(990, 0.6, 0.6); }
 
         /* ---------- state ---------- */
+        function migrateWorkout(w) {
+          if (!w || !w.blocks) return false;
+          var changed = false;
+          var blocks = [];
+          for (var i = 0; i < w.blocks.length; i++) {
+            var b = w.blocks[i];
+            if (b.kind === "pause") {
+              changed = true;
+              for (var j = i + 1; j < w.blocks.length; j++) {
+                if (w.blocks[j].kind === "round") {
+                  if (!(w.blocks[j].prep > 0)) w.blocks[j].prep = Math.max(1, b.seconds || 1);
+                  break;
+                }
+              }
+            } else {
+              blocks.push(b);
+            }
+          }
+          w.blocks = blocks;
+          return changed;
+        }
         var workouts = (function () {
           try {
             var raw = localStorage.getItem(KEY);
-            if (raw) return JSON.parse(raw);
+            if (raw) {
+              var ws = JSON.parse(raw);
+              if (ws) {
+                var changed = false;
+                for (var i = 0; i < ws.length; i++) changed = migrateWorkout(ws[i]) || changed;
+                if (changed) { try { localStorage.setItem(KEY, JSON.stringify(ws)); } catch (e2) {} }
+                return ws;
+              }
+            }
           } catch (e) {}
           return seeds();
         })();
+        var settings = (function () {
+          var d = { volume: 0.8, sound: "bel", countStart: true, countEnd: true };
+          try {
+            var raw = localStorage.getItem(SKEY);
+            if (raw) {
+              var s = JSON.parse(raw);
+              if (s) {
+                var v = Number(s.volume);
+                if (v >= 0 && v <= 1) d.volume = v;
+                if (["bel", "piep", "gong"].indexOf(s.sound) >= 0) d.sound = s.sound;
+                if (s.countStart === false) d.countStart = false;
+                if (s.countEnd === false) d.countEnd = false;
+              }
+            }
+          } catch (e) {}
+          return d;
+        })();
+        function saveSettings() { try { localStorage.setItem(SKEY, JSON.stringify(settings)); } catch (e) {} }
         var view = { name: "list" };
+        var dirty = false;
 
-        function save() { try { localStorage.setItem(KEY, JSON.stringify(workouts)); } catch (e) {} }
+        function save() { try { localStorage.setItem(KEY, JSON.stringify(workouts)); } catch (e) {} dirty = false; updateSaveBtn(); }
+        function markDirty() { dirty = true; updateSaveBtn(); }
+        function updateSaveBtn() { var btn = document.getElementById("saveBtn"); if (btn) btn.style.display = dirty ? "inline-flex" : "none"; }
         function findW(id) { for (var i = 0; i < workouts.length; i++) if (workouts[i].id === id) return workouts[i]; return null; }
         function findBlock(id) {
           var w = findW(view.id);
@@ -281,7 +376,7 @@
           var b = findBlock(id);
           if (!b) return;
           Object.assign(b, patch);
-          save();
+          markDirty();
           syncNums();
           updateStats();
         }
@@ -350,7 +445,8 @@
           if (remMs > 0) {
             paintTick(remMs);
             var secLeft = Math.ceil(remMs / 1000);
-            if (secLeft <= 3 && secLeft >= 1 && P.lastTick !== secLeft) { P.lastTick = secLeft; tick(); }
+            var wantTick = seg.kind === "active" ? settings.countEnd : settings.countStart;
+            if (wantTick && secLeft <= 3 && secLeft >= 1 && P.lastTick !== secLeft) { P.lastTick = secLeft; tick(); }
           } else {
             advance();
           }
@@ -369,7 +465,7 @@
           } else {
             P.idx++;
             P.startAt = Date.now();
-            bell();
+            notify();
             render();
           }
         }
@@ -404,12 +500,15 @@
           stepStop();
           if (view.name === "list") renderList();
           else if (view.name === "edit") renderEditor();
+          else if (view.name === "preview") renderPreview();
+          else if (view.name === "settings") renderSettings();
           else renderPlayer();
         }
 
         function renderList() {
           var html = '<div class="wrap"><div class="head"><div><h1>&#128170; Workout Timer</h1><div class="sub">Bouw je workout, doe hem met bel &amp; afcount.</div></div>' +
-            '<button class="btn" onclick="App.create()">' + svgS(IC.plus) + ' Nieuwe workout</button></div>';
+            '<div class="headbtns"><button class="ibtn" title="Instellingen" onclick="App.openSettings()">' + svgS(IC.sliders) + '</button>' +
+            '<button class="btn" onclick="App.create()">' + svgS(IC.plus) + ' Nieuwe workout</button></div></div>';
           if (workouts.length === 0) {
             html += '<p class="empty">Nog geen workouts. Maak er &eacute;&eacute;n aan om te beginnen.</p>';
           }
@@ -458,6 +557,7 @@
           var html = '<div class="topbar"><div class="in">' +
             '<button class="ibtn" title="Terug" onclick="App.back()">' + svgS(IC.back) + '</button>' +
             '<input class="winput" value="' + esc(w.name) + '" oninput="App.rename(this.value)" />' +
+            '<button class="btn" id="saveBtn" onclick="App.save()"' + (dirty ? '' : ' style="display:none"') + '>' + svgS(IC.save) + ' Opslaan</button>' +
             '<button class="btn" id="startBtn" ' + (segs.length === 0 ? "disabled" : "") + ' onclick="App.startWorkout()">' + svgF(IC.play) + ' Start</button>' +
             "</div></div><div class=\"wrap\">" +
             '<div class="stats"><span>&#9201; totaal <b id="statTot">' + fmt(total) + "</b> &middot; <span id=\"statSeg\">" + segs.length + '</span> segmenten</span><span class="r">sleep de greep om te sorteren</span></div>';
@@ -465,23 +565,21 @@
           for (var i = 0; i < w.blocks.length; i++) {
             var b = w.blocks[i];
             var isRound = b.kind === "round";
-            var isPause = b.kind === "pause";
-            var cls = isRound ? "round" : isPause ? "pause" : "";
-            var badge = isRound ? "Ronde &times;" : isPause ? "Pauze" : "Oefening";
-            var bcls = isRound ? "rd" : isPause ? "pz" : "ex";
+            var cls = isRound ? "round" : "";
+            var badge = isRound ? "Ronde &times;" : "Oefening";
+            var bcls = isRound ? "rd" : "ex";
             html += '<div class="block ' + cls + '" ondragover="App.dragOver(event)" ondrop="App.dropOn(\'' + b.id + '\')">' +
               '<div class="card-top">' +
               '<div class="grip" draggable="true" ondragstart="App.dragStart(\'' + b.id + '\',event)" ondragend="App.dragEnd()" title="Slepen om te verplaatsen">&#10278;</div>' +
               '<span class="badge ' + bcls + '">' + badge + "</span>" +
-              '<input class="bname" value="' + esc(b.name) + '" oninput="App.setName(\'' + b.id + '\',this.value)" />' +
+              '<textarea class="bname" rows="3" oninput="App.setName(\'' + b.id + '\',this.value)">' + esc(b.name) + '</textarea>' +
               '<button class="ibtn" title="Verwijderen" onclick="App.delBlock(\'' + b.id + '\')">' + svgS(IC.trash) + "</button>" +
               "</div>" +
               '<div class="card-bot"><div class="fields">';
             if (isRound) {
               html += fieldHtml(b.id, "herhalingen", "reps", 1);
+              html += fieldHtml(b.id, "voorbereiding (s)", "prep", 5);
               html += fieldHtml(b.id, "pauze rondes (s)", "rest", 5);
-            } else if (isPause) {
-              html += fieldHtml(b.id, "pauze (s)", "seconds", 5);
             } else {
               html += fieldHtml(b.id, "actief (s)", "active", 5);
               html += fieldHtml(b.id, "pauze (s)", "rest", 5);
@@ -496,9 +594,84 @@
           html += '<div class="adds">' +
             '<button class="add ex" onclick="App.addExercise()">' + svgS(IC.plus) + ' Oefening</button>' +
             '<button class="add rd" onclick="App.addRound()">' + svgS(IC.plus) + ' Ronde &times;</button>' +
-            '<button class="add pz" onclick="App.addPause()">' + svgS(IC.plus) + " Pauze</button>" +
             "</div>" +
-            '<p class="hint"><b>Ronde-blok:</b> herhaalt de oefeningen die eronder staan (tot de volgende ronde, een pauzeblok of het einde) het opgegeven aantal keren, met pauze ertussen. Tip: een ronde met 1 herhaling gebruik je als sectielabel (Warm-up, Cooldown). <b>Pauzeblok:</b> &eacute;&eacute;n keer een pauze &mdash; sluit de ronde erboven af, ideaal als voorbereidingstijd v&oacute;&oacute;r de volgende sectie. Tijdens de training hoor je een bel bij elke wissel en piepjes bij de laatste 3 seconden.</p></div>';
+            '<p class="hint"><b>Ronde-blok:</b> herhaalt de oefeningen die eronder staan (tot de volgende ronde of het einde) het opgegeven aantal keren, met pauze ertussen. <b>Voorbereiding:</b> v&oacute;&oacute;r de start van elke ronde is er eerst voorbereidingstijd om klaar te staan. Tip: een ronde met 1 herhaling gebruik je als sectielabel (Warm-up, Cooldown). Tijdens de training hoor je een meldingsgeluid bij elke wissel en eventueel afcount-piepjes &mdash; stel het volume en de geluiden in via <b>Instellingen</b>.</p></div>';
+          app.innerHTML = html;
+        }
+
+        function renderPreview() {
+          var w = findW(view.id);
+          if (!w) { view = { name: "list" }; renderList(); return; }
+          var segs = buildSegments(w.blocks);
+          var total = 0;
+          for (var k = 0; k < segs.length; k++) total += segs[k].seconds;
+          var ex = 0, rd = 0;
+          for (var n = 0; n < w.blocks.length; n++) {
+            if (w.blocks[n].kind === "exercise") ex++;
+            else if (w.blocks[n].kind === "round") rd++;
+          }
+
+          var html = '<div class="topbar"><div class="in">' +
+            '<button class="ibtn" title="Terug" onclick="App.back()">' + svgS(IC.back) + '</button>' +
+            '<div class="pvhead"><div class="t">' + esc(w.name) + '</div>' +
+            '<div class="meta">' + ex + ' oefeningen' + (rd > 0 ? ' &middot; ' + rd + ' ronde' + (rd > 1 ? 'n' : '') : '') + ' &middot; &#9201; ' + fmt(total) + ' &middot; ' + segs.length + ' segmenten</div></div>' +
+            '<button class="btn" ' + (segs.length === 0 ? "disabled" : "") + ' onclick="App.begin()">' + svgF(IC.play) + ' Start</button>' +
+            "</div></div><div class=\"wrap\">";
+
+          if (w.blocks.length === 0) {
+            html += '<p class="empty">Deze workout is nog leeg &mdash; voeg oefeningen toe in de editor.</p>';
+          } else {
+            html += '<div class="pv">';
+            var inRound = false;
+            for (var i = 0; i < w.blocks.length; i++) {
+              var b = w.blocks[i];
+              if (b.kind === "round") {
+                inRound = true;
+                var meta = [Math.max(1, b.reps) + "&times;"];
+                if (b.prep > 0) meta.push("voorbereiding " + b.prep + "s");
+                if (b.rest > 0) meta.push("pauze " + b.rest + "s");
+                html += '<div class="pv-round"><span class="badge rd">Ronde</span><span class="nm">' + esc(b.name) + '</span><span class="mt">' + meta.join(" &middot; ") + '</span></div>';
+              } else {
+                var t = Math.max(1, b.active || 0) + "s";
+                if (b.rest > 0) t += " + " + b.rest + "s pauze";
+                html += '<div class="pv-row' + (inRound ? " in" : "") + '"><span class="nm">' + esc(b.name) + '</span><span class="mt">' + t + '</span></div>';
+              }
+            }
+            html += "</div>";
+          }
+          html += '<p class="hint">Druk op <b>Start</b> bovenaan om de workout te beginnen.</p></div>';
+          app.innerHTML = html;
+        }
+
+        function renderSettings() {
+          var html = '<div class="topbar"><div class="in">' +
+            '<button class="ibtn" title="Terug" onclick="App.back()">' + svgS(IC.back) + '</button>' +
+            '<div class="pvhead"><div class="t">Instellingen</div></div>' +
+            "</div></div>" +
+            '<div class="wrap">' +
+            '<div class="setgroup"><div class="settitle">Volume</div>' +
+            '<div class="volrow"><input type="range" min="0" max="100" step="5" value="' + Math.round(settings.volume * 100) + '" oninput="App.setVol(this.value)">' +
+            '<span class="volval" id="volVal">' + Math.round(settings.volume * 100) + '%</span>' +
+            '<button class="ibtn" title="Luister" onclick="App.testSound()">' + svgF(IC.play) + "</button></div></div>" +
+            '<div class="setgroup"><div class="settitle">Meldingsgeluid</div><div class="sopts">';
+          var ids = ["bel", "piep", "gong"];
+          for (var i = 0; i < ids.length; i++) {
+            var s = SOUNDS[ids[i]];
+            var sel = settings.sound === ids[i];
+            html += '<button class="sopt' + (sel ? " sel" : "") + '" onclick="App.setSound(\'' + ids[i] + '\')">' +
+              '<span class="stxt"><span class="sn">' + s.name + '</span><span class="sd">' + s.desc + "</span></span>" +
+              (sel ? '<span class="check">&#10003;</span>' : "") + "</button>";
+          }
+          html += "</div></div>" +
+            '<div class="setgroup"><div class="settitle">Aftellen</div>' +
+            '<button class="setrow" onclick="App.toggleCount(\'countStart\')">' +
+            '<div class="settxt"><div class="l">Aftellen bij start</div><div class="d">Piepjes in de laatste 3 seconden v&oacute;&oacute;r het begin van een oefening (tijdens rust, pauze of voorbereiding)</div></div>' +
+            '<span class="sw' + (settings.countStart ? " on" : "") + '"></span></button>' +
+            '<button class="setrow" onclick="App.toggleCount(\'countEnd\')">' +
+            '<div class="settxt"><div class="l">Aftellen bij einde</div><div class="d">Piepjes in de laatste 3 seconden van elke actieve oefening</div></div>' +
+            '<span class="sw' + (settings.countEnd ? " on" : "") + '"></span></button>' +
+            "</div>" +
+            '<p class="hint">Het meldingsgeluid klinkt bij elke wissel van blok. Met <b>Luister</b> hoor je een voorbeeld op het gekozen volume.</p></div>';
           app.innerHTML = html;
         }
 
@@ -525,16 +698,19 @@
 
           var html = '<div class="player"><div class="phead"><div class="t">' +
             '<div class="wn">' + esc(w.name) + "</div>" +
-            (seg.round != null && seg.rounds > 1 ? '<div class="roundbadge">Ronde ' + seg.round + "/" + seg.rounds + "</div>" : "") +
-            '</div><div class="tt" id="tt"></div></div>' +
+            "</div></div>" +
             '<div class="pmid"><div class="ringwrap">' +
             '<svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="88" fill="none" stroke="#1e293b" stroke-width="10"/>' +
             '<circle id="ringFg" cx="100" cy="100" r="88" fill="none" stroke="' + color + '" stroke-width="10" stroke-linecap="round" stroke-dasharray="552.92" stroke-dashoffset="0"/></svg>' +
             '<div class="rem" id="rem" style="color:' + color + '">' + fmt(seg.seconds) + "</div></div>" +
             "<div><div class=\"cur\" style=\"color:" + color + '">' + esc(seg.label) + "</div>" +
             (isPause && seg.label === "Pauze" ? '<div class="subtxt">Even op adem komen&hellip;</div>' : "") +
+            (seg.kind === "prep" ? '<div class="subtxt">Maak je klaar voor de start&hellip;</div>' : "") +
             '<div class="next">' + nextHtml + "</div></div></div>" +
-            '<div class="pbar"><div class="track"><div class="fill" id="bar"></div></div></div>' +
+            '<div class="pbar"><div class="pinfo">' +
+            (seg.round != null && seg.rounds > 1 ? '<span class="roundbadge">Ronde ' + seg.round + "/" + seg.rounds + "</span>" : "") +
+            '<span class="tt" id="tt"></span></div>' +
+            '<div class="track"><div class="fill" id="bar"></div></div></div>' +
             '<div class="ctrls">' +
             '<button class="cbtn md" title="Stoppen" onclick="App.stop()">' + svgS(IC.x) + "</button>" +
             '<button class="cbtn big" title="' + (P.running ? "Pauze" : "Start") + '" onclick="App.toggle()">' + (P.running ? svgF(IC.pause) : svgF(IC.play)) + "</button>" +
@@ -548,7 +724,38 @@
         /* ---------- actions ---------- */
         var App = {
           edit: function (id) { view = { name: "edit", id: id }; render(); },
-          back: function () { view = { name: "list" }; render(); },
+          back: function () {
+            if (view.name === "preview") {
+              if (view.from === "edit") { view = { name: "edit", id: view.id }; render(); return; }
+              view = { name: "list" }; render(); return;
+            }
+            if (view.name === "settings") { view = { name: "list" }; render(); return; }
+            save();
+            view = { name: "list" };
+            render();
+          },
+          save: function () { save(); },
+          openSettings: function () { view = { name: "settings" }; render(); },
+          setVol: function (v) {
+            settings.volume = Math.max(0, Math.min(1, (parseInt(v) || 0) / 100));
+            saveSettings();
+            var lab = document.getElementById("volVal");
+            if (lab) lab.textContent = Math.round(settings.volume * 100) + "%";
+          },
+          setSound: function (id) {
+            if (!SOUNDS[id]) return;
+            settings.sound = id;
+            saveSettings();
+            render();
+            notify();
+          },
+          toggleCount: function (k) {
+            if (k !== "countStart" && k !== "countEnd") return;
+            settings[k] = !settings[k];
+            saveSettings();
+            render();
+          },
+          testSound: function () { notify(); setTimeout(tick, 450); },
           create: function () {
             var w = {
               id: uid(),
@@ -573,7 +780,7 @@
             save();
             render();
           },
-          rename: function (v) { var w = findW(view.id); if (w) { w.name = v; save(); } },
+          rename: function (v) { var w = findW(view.id); if (w) { w.name = v; markDirty(); } },
           setName: function (id, v) { silentBlock(id, { name: v }); },
           setNum: function (id, field, v) { silentBlock(id, { [field]: Math.max(0, parseInt(v) || 0) }); },
           stepStart: stepStart,
@@ -587,14 +794,14 @@
             if (from < 0 || to < 0 || to >= w.blocks.length) return;
             var m = w.blocks.splice(from, 1)[0];
             w.blocks.splice(to, 0, m);
-            save();
+            markDirty();
             render();
           },
           delBlock: function (id) {
             var w = findW(view.id);
             if (!w) return;
             w.blocks = w.blocks.filter(function (b) { return b.id !== id; });
-            save();
+            markDirty();
             render();
           },
           addExercise: function () {
@@ -603,21 +810,14 @@
             var n = 1;
             for (var i = 0; i < w.blocks.length; i++) if (w.blocks[i].kind === "exercise") n++;
             w.blocks.push({ id: uid(), kind: "exercise", name: "Oefening " + n, active: 40, rest: 20 });
-            save();
+            markDirty();
             render();
           },
           addRound: function () {
             var w = findW(view.id);
             if (!w) return;
-            w.blocks.push({ id: uid(), kind: "round", name: "Ronde", reps: 3, rest: 30 });
-            save();
-            render();
-          },
-          addPause: function () {
-            var w = findW(view.id);
-            if (!w) return;
-            w.blocks.push({ id: uid(), kind: "pause", name: "Pauze", seconds: 60 });
-            save();
+            w.blocks.push({ id: uid(), kind: "round", name: "Ronde", reps: 3, rest: 30, prep: 0 });
+            markDirty();
             render();
           },
           dragStart: function (id, ev) {
@@ -649,14 +849,19 @@
             if (fi < 0 || ti < 0) { render(); return; }
             var m = w.blocks.splice(fi, 1)[0];
             w.blocks.splice(ti, 0, m);
-            save();
+            markDirty();
             render();
           },
-          startWorkout: function () { App.play(view.id); },
+          startWorkout: function () { save(); App.play(view.id); },
           play: function (id) {
-            var w = findW(id);
+            if (!findW(id)) return;
+            view = { name: "preview", id: id, from: view.name };
+            render();
+          },
+          begin: function () {
+            var w = findW(view.id);
             if (!w) return;
-            view = { name: "play", id: id };
+            view = { name: "play", id: view.id };
             P.segs = buildSegments(w.blocks);
             P.totalSec = 0;
             for (var i = 0; i < P.segs.length; i++) P.totalSec += P.segs[i].seconds;
@@ -676,7 +881,7 @@
               P.running = false;
               render();
             } else {
-              if (P.elapsedRef === 0) bell();
+              if (P.elapsedRef === 0) notify();
               P.startAt = Date.now();
               P.running = true;
               startTimer();
