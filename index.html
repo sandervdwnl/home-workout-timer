@@ -269,7 +269,7 @@
         function tone(freq, delay, dur, gain) {
           var c = getCtx();
           if (!c) return;
-          var v = (gain || 0.5) * settings.volume;
+          var v = (gain || 1.0) * settings.volume;
           if (v <= 0.001) return;
           try {
             if (c.state === "suspended") c.resume();
