@@ -1,4 +1,4 @@
-const CACHE = "workout-timer-v5";
+const CACHE = "workout-timer-v6";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg"];
 
 self.addEventListener("install", (e) => {
