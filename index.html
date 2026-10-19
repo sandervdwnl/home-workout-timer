@@ -92,6 +92,9 @@
       .modal-actions .btn { flex: 1; }
       .settings-btn { padding: 10px 14px; font-size: 14px; }
       .file-input { display: none; }
+      .file-picker { margin: 16px 0; text-align: center; }
+      .file-picker .btn { display: inline-block; }
+      .file-label { cursor: pointer; }
       .pvhead { flex: 1; min-width: 0; }
       .pvhead .t { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .pvhead .meta { color: #94a3b8; font-size: 12px; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -532,13 +535,15 @@
               '<div class="modal-content">' +
                 '<h3>Workouts herstellen</h3>' +
                 '<p><b>Let op:</b> Dit vervangt <b>alle</b> bestaande workouts door de workouts uit het backup bestand. Zorg dat je een recente backup hebt als je bestaande workouts wilt bewaren.</p>' +
+                '<div class="file-picker">' +
+                  '<label class="btn file-label" for="modalFileInput">Kies backup bestand (.json)</label>' +
+                  '<input type="file" id="modalFileInput" class="file-input" accept=".json" onchange="App.handleFileSelect(event)">' +
+                '</div>' +
                 '<div class="modal-actions">' +
                   '<button class="btn" onclick="App.cancelImport()">Annuleren</button>' +
-                  '<button class="btn" onclick="App.importWorkouts()">Doorgaan</button>' +
                 '</div>' +
               '</div>' +
-            '</div>' +
-            '<input type="file" id="fileInput" class="file-input" accept=".json" onchange="App.handleFileSelect(event)">';
+            '</div>';
           if (workouts.length === 0) {
             html += '<p class="empty">Nog geen workouts. Maak er &eacute;&eacute;n aan om te beginnen.</p>';
           }
@@ -807,10 +812,7 @@
             if (modal) modal.classList.remove("active");
           },
           importWorkouts: function () {
-            var modal = document.getElementById("importModal");
-            if (modal) modal.classList.remove("active");
-            var input = document.getElementById("fileInput");
-            if (input) input.click();
+            // File input is nu direct in de modal
           },
           handleFileSelect: function (event) {
             var file = event.target.files[0];
@@ -822,6 +824,7 @@
                 if (Array.isArray(imported)) {
                   workouts = imported;
                   save();
+                  App.cancelImport();
                   render();
                 } else {
                   alert("Ongeldig backup bestand. Verwacht een array van workouts.");
@@ -832,6 +835,26 @@
             };
             reader.readAsText(file);
             event.target.value = "";
+          },
+          processFile: function (file) {
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              try {
+                var imported = JSON.parse(e.target.result);
+                if (Array.isArray(imported)) {
+                  workouts = imported;
+                  save();
+                  App.cancelImport();
+                  render();
+                } else {
+                  alert("Ongeldig backup bestand. Verwacht een array van workouts.");
+                }
+              } catch (err) {
+                alert("Fout bij importeren: " + err.message);
+              }
+            };
+            reader.readAsText(file);
           },
           setVol: function (v) {
             settings.volume = Math.max(0, Math.min(1, (parseInt(v) || 0) / 100));
