@@ -81,6 +81,17 @@
       .addContainer { margin-bottom: 12px; }
       .hint { background: rgba(30, 41, 59, .4); border-radius: 12px; padding: 12px; font-size: 12px; line-height: 1.6; color: #94a3b8; margin-top: 14px; }
       .hint b { color: #e2e8f0; }
+      .backup-row { display: flex; gap: 12px; justify-content: center; }
+      .backup-row .btn { padding: 10px 16px; font-size: 14px; }
+      .modal { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); z-index: 100; align-items: center; justify-content: center; }
+      .modal.active { display: flex; }
+      .modal-content { background: #1e293b; border-radius: 16px; padding: 24px; max-width: 400px; width: 90%; text-align: center; }
+      .modal-content h3 { font-size: 18px; margin-bottom: 12px; }
+      .modal-content p { color: #cbd5e1; font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
+      .modal-actions { display: flex; gap: 12px; justify-content: center; }
+      .modal-actions .btn { flex: 1; }
+      .settings-btn { padding: 10px 14px; font-size: 14px; }
+      .file-input { display: none; }
       .pvhead { flex: 1; min-width: 0; }
       .pvhead .t { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .pvhead .meta { color: #94a3b8; font-size: 12px; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -515,8 +526,19 @@
 
         function renderList() {
           var html = '<div class="wrap"><div class="head"><div><h1>&#128170; Workout Timer</h1><div class="sub">Bouw je workout, doe hem met bel &amp; afcount.</div></div>' +
-            '<div class="headbtns"><button class="ibtn" title="Instellingen" onclick="App.openSettings()">' + svgS(IC.sliders) + '</button>' +
-            '<button class="btn" onclick="App.create()">' + svgS(IC.plus) + ' Nieuwe workout</button></div></div>';
+            '<div class="headbtns"><button class="btn settings-btn" onclick="App.openSettings()">' + svgS(IC.sliders) + ' Instellingen</button>' +
+            '<button class="btn" onclick="App.create()">' + svgS(IC.plus) + ' Nieuwe workout</button></div></div>' +
+            '<div id="importModal" class="modal">' +
+              '<div class="modal-content">' +
+                '<h3>Workouts herstellen</h3>' +
+                '<p><b>Let op:</b> Dit vervangt <b>alle</b> bestaande workouts door de workouts uit het backup bestand. Zorg dat je een recente backup hebt als je bestaande workouts wilt bewaren.</p>' +
+                '<div class="modal-actions">' +
+                  '<button class="btn" onclick="App.cancelImport()">Annuleren</button>' +
+                  '<button class="btn" onclick="App.importWorkouts()">Doorgaan</button>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<input type="file" id="fileInput" class="file-input" accept=".json" onchange="App.handleFileSelect(event)">';
           if (workouts.length === 0) {
             html += '<p class="empty">Nog geen workouts. Maak er &eacute;&eacute;n aan om te beginnen.</p>';
           }
@@ -689,6 +711,12 @@
             '<div class="settxt"><div class="l">Aftellen bij einde</div><div class="d">Piepjes in de laatste 3 seconden van elke actieve oefening</div></div>' +
             '<span class="sw' + (settings.countEnd ? " on" : "") + '"></span></button>' +
             "</div>" +
+            '<div class="setgroup"><div class="settitle">Backup &amp; Herstel</div>' +
+            '<div class="backup-row">' +
+              '<button class="btn" onclick="App.exportWorkouts()">' + svgS(IC.save) + ' Backup maken</button>' +
+              '<button class="btn" onclick="App.showImportConfirm()">' + svgS(IC.copy) + ' Backup herstellen</button>' +
+            '</div>' +
+            '<p class="hint">Maak regelmatig een backup om je workouts veilig te bewaren. Het herstellen vervangt <b>alle</b> bestaande workouts.</p></div>' +
             '<p class="hint">Het meldingsgeluid klinkt bij elke wissel van blok. Met <b>Luister</b> hoor je een voorbeeld op het gekozen volume.</p></div>';
           app.innerHTML = html;
         }
@@ -758,6 +786,53 @@
           },
           save: function () { save(); },
           openSettings: function () { view = { name: "settings" }; render(); },
+          exportWorkouts: function () {
+            var data = JSON.stringify(workouts, null, 2);
+            var blob = new Blob([data], { type: "application/json" });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement("a");
+            a.href = url;
+            a.download = "workout-timer-backup-" + new Date().toISOString().slice(0, 10) + ".json";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          },
+          showImportConfirm: function () {
+            var modal = document.getElementById("importModal");
+            if (modal) modal.classList.add("active");
+          },
+          cancelImport: function () {
+            var modal = document.getElementById("importModal");
+            if (modal) modal.classList.remove("active");
+          },
+          importWorkouts: function () {
+            var modal = document.getElementById("importModal");
+            if (modal) modal.classList.remove("active");
+            var input = document.getElementById("fileInput");
+            if (input) input.click();
+          },
+          handleFileSelect: function (event) {
+            var file = event.target.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              try {
+                var imported = JSON.parse(e.target.result);
+                if (Array.isArray(imported)) {
+                  workouts = imported;
+                  save();
+                  render();
+                } else {
+                  alert("Ongeldig backup bestand. Verwacht een array van workouts.");
+                }
+              } catch (err) {
+                alert("Fout bij importeren: " + err.message);
+              }
+            };
+            reader.readAsText(file);
+            event.target.value = "";
+          },
           setVol: function (v) {
             settings.volume = Math.max(0, Math.min(1, (parseInt(v) || 0) / 100));
             saveSettings();
