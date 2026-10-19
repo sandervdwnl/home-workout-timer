@@ -45,32 +45,40 @@
       .stats { display: flex; justify-content: space-between; gap: 8px; background: rgba(30, 41, 59, .6); border-radius: 12px; padding: 8px 12px; font-size: 12px; color: #cbd5e1; margin-bottom: 14px; }
       .stats b { color: #6ee7b7; font-variant-numeric: tabular-nums; }
       .stats .r { color: #94a3b8; text-align: right; }
-      .block { border-radius: 16px; border: 1px solid #334155; background: rgba(30, 41, 59, .7); padding: 12px; margin-bottom: 12px; }
+      .block { border-radius: 12px; border: 1px solid #334155; background: rgba(30, 41, 59, .7); padding: 8px; margin-bottom: 8px; }
       .block.round { border-color: rgba(99, 102, 241, .6); background: rgba(30, 27, 75, .4); }
-      .block.over { outline: 2px solid #34d399; }
-      .card-top { display: flex; align-items: center; gap: 8px; }
-      .grip { cursor: grab; padding: 4px; color: #64748b; font-size: 20px; line-height: 1; }
-      .badge { font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; padding: 4px 8px; border-radius: 6px; flex-shrink: 0; }
+      .card-top { display: flex; align-items: center; gap: 6px; }
+      .card-top .bname { margin-right: 4px; }
+      .badge { font-size: 9px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; }
       .badge.ex { background: rgba(52, 211, 153, .2); color: #6ee7b7; }
       .badge.rd { background: rgba(99, 102, 241, .3); color: #a5b4fc; }
-      .bname { flex: 1; min-width: 0; background: #0f172a; border: 1px solid #475569; border-radius: 10px; padding: 8px; color: #f1f5f9; outline: none; font-size: 14px; resize: none; line-height: 1.4; }
+      .bname { flex: 1; min-width: 0; background: #0f172a; border: 1px solid #475569; border-radius: 8px; padding: 6px 8px; color: #f1f5f9; outline: none; font-size: 14px; resize: none; line-height: 1.4; min-height: 36px; }
       .bname:focus { border-color: #34d399; }
-      .card-bot { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px; margin-top: 10px; padding-left: 34px; }
-      .fields { display: flex; flex-wrap: wrap; gap: 12px; }
-      .field { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-      .flabel { font-size: 10px; color: #94a3b8; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; }
+      .card-bot { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 6px; margin-top: 4px; }
+      .fields { display: flex; flex-wrap: wrap; gap: 8px; }
+      .round-fields { width: 100%; }
+      .round-row { display: flex; gap: 8px; }
+      .field { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+      .flabel { font-size: 9px; color: #94a3b8; font-weight: 600; letter-spacing: .02em; text-transform: uppercase; }
       .stepper { display: flex; gap: 4px; }
-      .stepper button { width: 44px; height: 44px; background: #334155; border-radius: 10px; font-size: 20px; font-weight: 800; color: #f1f5f9; user-select: none; touch-action: manipulation; }
+      .stepper button { width: 36px; height: 36px; background: #334155; border-radius: 8px; font-size: 18px; font-weight: 800; color: #f1f5f9; user-select: none; touch-action: manipulation; }
       .stepper button:active { background: #475569; }
-      .stepper input { width: 48px; height: 44px; background: #0f172a; border: 1px solid #475569; border-radius: 10px; text-align: center; font-size: 17px; font-weight: 800; color: #f1f5f9; outline: none; -moz-appearance: textfield; }
+      .stepper input { width: 42px; height: 36px; background: #0f172a; border: 1px solid #475569; border-radius: 8px; text-align: center; font-size: 16px; font-weight: 800; color: #f1f5f9; outline: none; -moz-appearance: textfield; }
       .stepper input::-webkit-inner-spin-button, .stepper input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
       .moves { display: flex; gap: 4px; padding-bottom: 4px; }
-      .moves .ibtn { padding: 10px; }
+      .moves .ibtn { padding: 8px; }
+      .moves .ibtn:last-child { margin-left: 4px; }
+      .card-top .ibtn { padding: 6px; }
+      .card-top .del-btn { margin-left: 2px; }
       .adds { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
       .add { border: 1px dashed; border-radius: 12px; padding: 12px; font-weight: 600; font-size: 14px; display: flex; justify-content: center; align-items: center; gap: 6px; }
       .add.ex { border-color: rgba(52, 211, 153, .6); color: #6ee7b7; }
       .add.rd { border-color: rgba(129, 140, 248, .6); color: #a5b4fc; }
       .add svg { width: 14px; height: 14px; }
+      .adds.inline { display: flex; gap: 8px; margin: 8px 0 0 34px; flex-wrap: wrap; }
+      .adds.inline .add { flex: 1; min-width: 140px; }
+      .adds.inline .ibtn { padding: 8px; }
+      .addContainer { margin-bottom: 12px; }
       .hint { background: rgba(30, 41, 59, .4); border-radius: 12px; padding: 12px; font-size: 12px; line-height: 1.6; color: #94a3b8; margin-top: 14px; }
       .hint b { color: #e2e8f0; }
       .pvhead { flex: 1; min-width: 0; }
@@ -112,20 +120,21 @@
       .player { display: flex; flex-direction: column; min-height: 100vh; }
       .phead { display: flex; align-items: center; gap: 10px; padding: 12px; max-width: 520px; margin: 0 auto; width: 100%; }
       .phead .t { flex: 1; min-width: 0; }
-      .phead .wn { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-      .roundbadge { font-size: 12px; color: #a5b4fc; }
-      .tt { font-size: 12px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+      .phead .wn { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 28px; text-align: center; }
+      .roundbadge { font-size: 16px; color: #a5b4fc; }
+      .tt { font-size: 14px; color: #cbd5e1; font-variant-numeric: tabular-nums; }
       .pmid { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; padding: 0 20px; }
       .ringwrap { position: relative; width: 224px; height: 224px; }
       .ringwrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
       .rem { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 54px; font-weight: 800; font-variant-numeric: tabular-nums; }
       .cur { font-size: 26px; font-weight: 800; text-align: center; }
-      .subtxt { color: #94a3b8; font-size: 14px; margin-top: 4px; }
-      .next { font-size: 14px; color: #cbd5e1; margin-top: 12px; text-align: center; }
+      .subtxt { color: #cbd5e1; font-size: 16px; margin-top: 6px; }
+      .roundtitle { color: #f1f5f9; font-size: 20px; margin-bottom: 8px; font-weight: 700; text-align: center; }
+      .next { font-size: 18px; color: #f1f5f9; margin-top: 12px; text-align: center; }
       .next b { color: #6ee7b7; }
       .pbar { padding: 0 24px; max-width: 520px; margin: 0 auto; width: 100%; }
-      .pinfo { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; min-height: 15px; }
-      .pinfo .tt { margin-left: auto; color: #cbd5e1; }
+      .pinfo { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; min-height: 18px; }
+      .pinfo .tt { margin-left: auto; color: #cbd5e1; font-size: 14px; }
       .pbar .track { height: 6px; background: #1e293b; border-radius: 99px; overflow: hidden; }
       .pbar .fill { height: 100%; background: #34d399; border-radius: 99px; width: 0%; }
       .ctrls { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 24px; }
@@ -180,7 +189,7 @@
             {
               id: uid(), name: "Full Body HIIT",
               blocks: [
-                { id: uid(), kind: "round", name: "Ronde", reps: 3, rest: 30 },
+                { id: uid(), kind: "round", name: "Ronde", reps: 3, rest: 30, restAfterLast: 0 },
                 { id: uid(), kind: "exercise", name: "Jumping jacks", active: 40, rest: 10 },
                 { id: uid(), kind: "exercise", name: "Push-ups", active: 30, rest: 15 },
                 { id: uid(), kind: "exercise", name: "Squats", active: 40, rest: 15 },
@@ -190,7 +199,7 @@
             {
               id: uid(), name: "Tabata Quickie",
               blocks: [
-                { id: uid(), kind: "round", name: "Tabata", reps: 4, rest: 20 },
+                { id: uid(), kind: "round", name: "Tabata", reps: 4, rest: 20, restAfterLast: 0 },
                 { id: uid(), kind: "exercise", name: "Burpees", active: 20, rest: 10 },
                 { id: uid(), kind: "exercise", name: "High knees", active: 20, rest: 10 }
               ]
@@ -198,24 +207,24 @@
             {
               id: uid(), name: "25-min Low Impact (yoga mat)",
               blocks: [
-                { id: uid(), kind: "round", name: "Warm-up", reps: 1, rest: 0 },
+                { id: uid(), kind: "round", name: "Warm-up", reps: 1, rest: 0, restAfterLast: 0 },
                 { id: uid(), kind: "exercise", name: "March in place + arm swings", active: 60, rest: 0 },
                 { id: uid(), kind: "exercise", name: "Cat-cow + hip circles", active: 60, rest: 0 },
                 { id: uid(), kind: "exercise", name: "Shoulder pull-aparts (loop band)", active: 60, rest: 0 },
-                { id: uid(), kind: "round", name: "Conditioning", reps: 2, rest: 60 },
+                { id: uid(), kind: "round", name: "Conditioning", reps: 2, rest: 60, restAfterLast: 0 },
                 { id: uid(), kind: "exercise", name: "Side-step jacks (band enkels)", active: 40, rest: 20 },
                 { id: uid(), kind: "exercise", name: "Squat + overhead press (lange band)", active: 40, rest: 20 },
                 { id: uid(), kind: "exercise", name: "High-knee marches", active: 40, rest: 20 },
                 { id: uid(), kind: "exercise", name: "Seated row sprint (lange band)", active: 40, rest: 20 },
-                { id: uid(), kind: "round", name: "Strength", reps: 2, rest: 20, prep: 30 },
+                { id: uid(), kind: "round", name: "Strength", reps: 2, rest: 20, restAfterLast: 0 },
                 { id: uid(), kind: "exercise", name: "Goblet squat (duikgewicht)", active: 45, rest: 15 },
                 { id: uid(), kind: "exercise", name: "Glute bridge (gewicht op heupen)", active: 45, rest: 15 },
                 { id: uid(), kind: "exercise", name: "Seated band row", active: 45, rest: 15 },
                 { id: uid(), kind: "exercise", name: "Lateral walks (loop band)", active: 45, rest: 15 },
-                { id: uid(), kind: "round", name: "Core finisher", reps: 1, rest: 0 },
+                { id: uid(), kind: "round", name: "Core finisher", reps: 1, rest: 0, restAfterLast: 0 },
                 { id: uid(), kind: "exercise", name: "Plank + shoulder taps", active: 45, rest: 10 },
                 { id: uid(), kind: "exercise", name: "Dead bug", active: 45, rest: 0 },
-                { id: uid(), kind: "round", name: "Cooldown", reps: 1, rest: 0 },
+                { id: uid(), kind: "round", name: "Cooldown", reps: 1, rest: 0, restAfterLast: 0 },
                 { id: uid(), kind: "exercise", name: "Hamstring/hip/chest stretch + diep ademen", active: 120, rest: 0 }
               ]
             }
@@ -236,14 +245,15 @@
               if (inner.length === 0) continue;
               var reps = Math.max(1, b.reps);
               for (var r = 1; r <= reps; r++) {
-                if (b.prep > 0) {
-                  out.push({ kind: "prep", label: b.name + " — voorbereiding", seconds: b.prep, round: r, rounds: reps });
-                }
+
                 for (var k = 0; k < inner.length; k++) {
-                  out.push(Object.assign({}, inner[k], { round: r, rounds: reps }));
+                  out.push(Object.assign({}, inner[k], { round: r, rounds: reps, roundName: b.name }));
                 }
                 if (r < reps && b.rest > 0) {
-                  out.push({ kind: "roundRest", label: b.name + " — pauze", seconds: b.rest, round: r, rounds: reps });
+                  out.push({ kind: "roundRest", label: b.name + " — pauze", seconds: b.rest, round: r, rounds: reps, roundName: b.name });
+                }
+                if (r === reps && (b.restAfterLast || 0) > 0) {
+                  out.push({ kind: "roundRest", label: b.name + " — pauze na ronde", seconds: b.restAfterLast, round: r, rounds: reps, roundName: b.name });
                 }
               }
             } else {
@@ -304,13 +314,11 @@
             var b = w.blocks[i];
             if (b.kind === "pause") {
               changed = true;
-              for (var j = i + 1; j < w.blocks.length; j++) {
-                if (w.blocks[j].kind === "round") {
-                  if (!(w.blocks[j].prep > 0)) w.blocks[j].prep = Math.max(1, b.seconds || 1);
-                  break;
-                }
-              }
             } else {
+              if (b.kind === "round" && b.restAfterLast === undefined) {
+                b.restAfterLast = 0;
+                changed = true;
+              }
               blocks.push(b);
             }
           }
@@ -366,7 +374,7 @@
 
         var P = {
           segs: [], totalSec: 0, idx: 0, running: false, finished: false,
-          elapsedRef: 0, startAt: 0, lastTick: null, timer: null, lock: null, dragId: null
+          elapsedRef: 0, startAt: 0, lastTick: null, timer: null, lock: null
         };
 
         var app = document.getElementById("app");
@@ -553,6 +561,8 @@
           var segs = buildSegments(w.blocks);
           var total = 0;
           for (var k = 0; k < segs.length; k++) total += segs[k].seconds;
+          var containers = document.querySelectorAll(".addContainer");
+          for (var c = 0; c < containers.length; c++) containers[c].remove();
 
           var html = '<div class="topbar"><div class="in">' +
             '<button class="ibtn" title="Terug" onclick="App.back()">' + svgS(IC.back) + '</button>' +
@@ -560,7 +570,7 @@
             '<button class="btn" id="saveBtn" onclick="App.save()"' + (dirty ? '' : ' style="display:none"') + '>' + svgS(IC.save) + ' Opslaan</button>' +
             '<button class="btn" id="startBtn" ' + (segs.length === 0 ? "disabled" : "") + ' onclick="App.startWorkout()">' + svgF(IC.play) + ' Start</button>' +
             "</div></div><div class=\"wrap\">" +
-            '<div class="stats"><span>&#9201; totaal <b id="statTot">' + fmt(total) + "</b> &middot; <span id=\"statSeg\">" + segs.length + '</span> segmenten</span><span class="r">sleep de greep om te sorteren</span></div>';
+            '<div class="stats"><span>&#9201; totaal <b id="statTot">' + fmt(total) + "</b> &middot; <span id=\"statSeg\">" + segs.length + '</span> segmenten</span></div>';
 
           for (var i = 0; i < w.blocks.length; i++) {
             var b = w.blocks[i];
@@ -568,18 +578,24 @@
             var cls = isRound ? "round" : "";
             var badge = isRound ? "Ronde &times;" : "Oefening";
             var bcls = isRound ? "rd" : "ex";
-            html += '<div class="block ' + cls + '" ondragover="App.dragOver(event)" ondrop="App.dropOn(\'' + b.id + '\')">' +
+            html += '<div class="block ' + cls + '" data-block-id="' + b.id + '">' +
               '<div class="card-top">' +
-              '<div class="grip" draggable="true" ondragstart="App.dragStart(\'' + b.id + '\',event)" ondragend="App.dragEnd()" title="Slepen om te verplaatsen">&#10278;</div>' +
               '<span class="badge ' + bcls + '">' + badge + "</span>" +
               '<textarea class="bname" rows="3" oninput="App.setName(\'' + b.id + '\',this.value)">' + esc(b.name) + '</textarea>' +
-              '<button class="ibtn" title="Verwijderen" onclick="App.delBlock(\'' + b.id + '\')">' + svgS(IC.trash) + "</button>" +
+              '<button class="ibtn dup-btn" title="Dupliceren" onclick="App.dupBlock(\'' + b.id + '\')">' + svgS(IC.copy) + "</button>" +
+              '<button class="ibtn del-btn" title="Verwijderen" onclick="App.delBlock(\'' + b.id + '\')">' + svgS(IC.trash) + "</button>" +
               "</div>" +
               '<div class="card-bot"><div class="fields">';
             if (isRound) {
-              html += fieldHtml(b.id, "herhalingen", "reps", 1);
-              html += fieldHtml(b.id, "voorbereiding (s)", "prep", 5);
-              html += fieldHtml(b.id, "pauze rondes (s)", "rest", 5);
+              html += '<div class="round-fields">' +
+                '<div class="round-row">' +
+                  fieldHtml(b.id, "herhalingen", "reps", 1) +
+                  fieldHtml(b.id, "pauze tussen (s)", "rest", 5) +
+                '</div>' +
+                '<div class="round-row">' +
+                  fieldHtml(b.id, "pauze na ronde (s)", "restAfterLast", 5) +
+                '</div>' +
+              '</div>';
             } else {
               html += fieldHtml(b.id, "actief (s)", "active", 5);
               html += fieldHtml(b.id, "pauze (s)", "rest", 5);
@@ -588,6 +604,7 @@
               '<div class="moves">' +
               '<button class="ibtn" title="Omhoog" ' + (i === 0 ? "disabled" : "") + ' onclick="App.move(\'' + b.id + '\',-1)">' + svgS(IC.up) + "</button>" +
               '<button class="ibtn" title="Omlaag" ' + (i === w.blocks.length - 1 ? "disabled" : "") + ' onclick="App.move(\'' + b.id + '\',1)">' + svgS(IC.down) + "</button>" +
+              '<button class="ibtn" title="Voeg toe na dit blok" onclick="App.addAfter(\'' + b.id + '\')">' + svgS(IC.plus) + "</button>" +
               "</div></div></div>";
           }
 
@@ -595,7 +612,7 @@
             '<button class="add ex" onclick="App.addExercise()">' + svgS(IC.plus) + ' Oefening</button>' +
             '<button class="add rd" onclick="App.addRound()">' + svgS(IC.plus) + ' Ronde &times;</button>' +
             "</div>" +
-            '<p class="hint"><b>Ronde-blok:</b> herhaalt de oefeningen die eronder staan (tot de volgende ronde of het einde) het opgegeven aantal keren, met pauze ertussen. <b>Voorbereiding:</b> v&oacute;&oacute;r de start van elke ronde is er eerst voorbereidingstijd om klaar te staan. Tip: een ronde met 1 herhaling gebruik je als sectielabel (Warm-up, Cooldown). Tijdens de training hoor je een meldingsgeluid bij elke wissel en eventueel afcount-piepjes &mdash; stel het volume en de geluiden in via <b>Instellingen</b>.</p></div>';
+            '<p class="hint"><b>Ronde-blok:</b> herhaalt de oefeningen die eronder staan het opgegeven aantal keren. <b>Pauze tussen herhalingen:</b> rusttijd tussen elke herhaling. <b>Pauze na laatste herhaling:</b> extra rusttijd na de laatste herhaling (handig voor rust voor de volgende ronde). Tip: een ronde met 1 herhaling gebruik je als sectielabel (Warm-up, Cooldown). Tijdens de training hoor je een meldingsgeluid bij elke wissel en eventueel afcount-piepjes &mdash; stel het volume en de geluiden in via <b>Instellingen</b>.</p></div>';
           app.innerHTML = html;
         }
 
@@ -628,8 +645,8 @@
               if (b.kind === "round") {
                 inRound = true;
                 var meta = [Math.max(1, b.reps) + "&times;"];
-                if (b.prep > 0) meta.push("voorbereiding " + b.prep + "s");
-                if (b.rest > 0) meta.push("pauze " + b.rest + "s");
+                if (b.rest > 0) meta.push("pauze tussen herhalingen " + b.rest + "s");
+                if ((b.restAfterLast || 0) > 0) meta.push("pauze na ronde " + b.restAfterLast + "s");
                 html += '<div class="pv-round"><span class="badge rd">Ronde</span><span class="nm">' + esc(b.name) + '</span><span class="mt">' + meta.join(" &middot; ") + '</span></div>';
               } else {
                 var t = Math.max(1, b.active || 0) + "s";
@@ -666,7 +683,7 @@
           html += "</div></div>" +
             '<div class="setgroup"><div class="settitle">Aftellen</div>' +
             '<button class="setrow" onclick="App.toggleCount(\'countStart\')">' +
-            '<div class="settxt"><div class="l">Aftellen bij start</div><div class="d">Piepjes in de laatste 3 seconden v&oacute;&oacute;r het begin van een oefening (tijdens rust, pauze of voorbereiding)</div></div>' +
+            '<div class="settxt"><div class="l">Aftellen bij start</div><div class="d">Piepjes in de laatste 3 seconden v&oacute;&oacute;r het begin van een oefening (tijdens rust of pauze)</div></div>' +
             '<span class="sw' + (settings.countStart ? " on" : "") + '"></span></button>' +
             '<button class="setrow" onclick="App.toggleCount(\'countEnd\')">' +
             '<div class="settxt"><div class="l">Aftellen bij einde</div><div class="d">Piepjes in de laatste 3 seconden van elke actieve oefening</div></div>' +
@@ -700,13 +717,17 @@
           var html = '<div class="player"><div class="phead"><div class="t">' +
             '<div class="wn">' + esc(w.name) + "</div>" +
             "</div></div>" +
-            '<div class="pmid"><div class="ringwrap">' +
+            '<div class="pmid">' +
+            (seg.round != null && seg.rounds > 1 ? '<div class="roundtitle">' + esc(seg.roundName) + ' — Ronde ' + seg.round + ' van ' + seg.rounds + '</div>' : "") +
+            '<div class="ringwrap">' +
             '<svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="88" fill="none" stroke="#1e293b" stroke-width="10"/>' +
             '<circle id="ringFg" cx="100" cy="100" r="88" fill="none" stroke="' + color + '" stroke-width="10" stroke-linecap="round" stroke-dasharray="552.92" stroke-dashoffset="0"/></svg>' +
             '<div class="rem" id="rem" style="color:' + color + '">' + fmt(seg.seconds) + "</div></div>" +
             "<div><div class=\"cur\" style=\"color:" + color + '">' + esc(seg.label) + "</div>" +
+
             (isPause && seg.label === "Pauze" ? '<div class="subtxt">Even op adem komen&hellip;</div>' : "") +
-            (seg.kind === "prep" ? '<div class="subtxt">Maak je klaar voor de start&hellip;</div>' : "") +
+            (isPause && seg.label.indexOf("pauze na ronde") >= 0 ? '<div class="subtxt">Extra rust voor de volgende ronde&hellip;</div>' : "") +
+
             '<div class="next">' + nextHtml + "</div></div></div>" +
             '<div class="pbar"><div class="pinfo">' +
             (seg.round != null && seg.rounds > 1 ? '<span class="roundbadge">Ronde ' + seg.round + "/" + seg.rounds + "</span>" : "") +
@@ -805,6 +826,25 @@
             markDirty();
             render();
           },
+          dupBlock: function (id) {
+            var w = findW(view.id);
+            if (!w) return;
+            var idx = -1;
+            for (var i = 0; i < w.blocks.length; i++) {
+              if (w.blocks[i].id === id) { idx = i; break; }
+            }
+            if (idx < 0) return;
+            var b = w.blocks[idx];
+            var copy = Object.assign({}, b, { id: uid() });
+            if (b.kind === "exercise") {
+              copy.name = b.name + " (kopie)";
+            } else if (b.kind === "round") {
+              copy.name = b.name + " (kopie)";
+            }
+            w.blocks.splice(idx + 1, 0, copy);
+            markDirty();
+            render();
+          },
           addExercise: function () {
             var w = findW(view.id);
             if (!w) return;
@@ -817,41 +857,65 @@
           addRound: function () {
             var w = findW(view.id);
             if (!w) return;
-            w.blocks.push({ id: uid(), kind: "round", name: "Ronde", reps: 3, rest: 30, prep: 0 });
+            w.blocks.push({ id: uid(), kind: "round", name: "Ronde", reps: 3, rest: 30, restAfterLast: 0 });
             markDirty();
             render();
           },
-          dragStart: function (id, ev) {
-            P.dragId = id;
-            try { if (ev.dataTransfer) ev.dataTransfer.setData("text/plain", id); } catch (e) {}
-          },
-          dragEnd: function () {
-            P.dragId = null;
-            var els = document.querySelectorAll(".block.over");
-            for (var i = 0; i < els.length; i++) els[i].classList.remove("over");
-          },
-          dragOver: function (ev) {
-            ev.preventDefault();
-            var els = document.querySelectorAll(".block.over");
-            for (var i = 0; i < els.length; i++) els[i].classList.remove("over");
-            ev.currentTarget.classList.add("over");
-          },
-          dropOn: function (id) {
-            var from = P.dragId;
-            P.dragId = null;
+          addAfter: function (id) {
             var w = findW(view.id);
-            if (!w) { render(); return; }
-            if (!from || from === id) { render(); return; }
-            var fi = -1, ti = -1;
+            if (!w) return;
+            var idx = -1;
             for (var i = 0; i < w.blocks.length; i++) {
-              if (w.blocks[i].id === from) fi = i;
-              if (w.blocks[i].id === id) ti = i;
+              if (w.blocks[i].id === id) { idx = i; break; }
             }
-            if (fi < 0 || ti < 0) { render(); return; }
-            var m = w.blocks.splice(fi, 1)[0];
-            w.blocks.splice(ti, 0, m);
+            if (idx < 0) return;
+            var exCount = 0, rdCount = 0;
+            for (var i = 0; i < w.blocks.length; i++) {
+              if (w.blocks[i].kind === "exercise") exCount++;
+              else if (w.blocks[i].kind === "round") rdCount++;
+            }
+            var newExName = "Oefening " + (exCount + 1);
+            var newRdName = "Ronde " + (rdCount + 1);
+            var html = '<div class="adds inline" id="addAfter-' + id + '">' +
+              '<button class="add ex" onclick="App.insertExercise(\'' + id + '\',\'' + newExName + '\')">' + svgS(IC.plus) + ' Oefening</button>' +
+              '<button class="add rd" onclick="App.insertRound(\'' + id + '\',\'' + newRdName + '\')">' + svgS(IC.plus) + ' Ronde</button>' +
+              '<button class="ibtn" onclick="App.cancelAdd()">' + svgS(IC.x) + '</button>' +
+              '</div>';
+            var container = document.createElement("div");
+            container.className = "addContainer";
+            container.innerHTML = html;
+            var blockEl = document.querySelector('[data-block-id="' + id + '"]');
+            if (blockEl) blockEl.parentNode.insertBefore(container, blockEl.nextSibling);
+          },
+          insertExercise: function (afterId, name) {
+            var w = findW(view.id);
+            if (!w) return;
+            var idx = -1;
+            for (var i = 0; i < w.blocks.length; i++) {
+              if (w.blocks[i].id === afterId) { idx = i; break; }
+            }
+            if (idx < 0) return;
+            w.blocks.splice(idx + 1, 0, { id: uid(), kind: "exercise", name: name, active: 40, rest: 20 });
             markDirty();
             render();
+          },
+          insertRound: function (afterId, name) {
+            var w = findW(view.id);
+            if (!w) return;
+            var idx = -1;
+            for (var i = 0; i < w.blocks.length; i++) {
+              if (w.blocks[i].id === afterId) { idx = i; break; }
+            }
+            if (idx < 0) return;
+            w.blocks.splice(idx + 1, 0, { id: uid(), kind: "round", name: name, reps: 3, rest: 30, restAfterLast: 0 });
+            markDirty();
+            render();
+          },
+          cancelAdd: function () {
+            var containers = document.querySelectorAll(".addContainer");
+            for (var i = 0; i < containers.length; i++) {
+              containers[i].remove();
+            }
           },
           startWorkout: function () { save(); App.play(view.id); },
           play: function (id) {
