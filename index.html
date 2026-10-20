@@ -93,8 +93,19 @@
       .settings-btn { padding: 10px 14px; font-size: 14px; }
       .file-input { display: none; }
       .file-picker { margin: 16px 0; text-align: center; }
-      .file-picker .btn { display: inline-block; }
-      .file-label { cursor: pointer; }
+      .file-hint { color: #94a3b8; font-size: 13px; margin-bottom: 8px; }
+      .file-picker input[type="file"] { display: block; width: 100%; margin: 0 auto; }
+      .file-picker input[type="file"]::file-selector-button { 
+        background: #34d399; 
+        color: #020617; 
+        border: none; 
+        border-radius: 12px; 
+        padding: 12px 16px; 
+        font: inherit; 
+        font-weight: 700; 
+        cursor: pointer; 
+        width: 100%;
+      }
       .pvhead { flex: 1; min-width: 0; }
       .pvhead .t { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .pvhead .meta { color: #94a3b8; font-size: 12px; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -311,13 +322,19 @@
           } catch (e) {}
         }
         var SOUNDS = {
-          bel: { name: "Bel", desc: "heldere dubbelbel", play: function () { tone(880, 0, 0.3); tone(1318, 0.03, 0.4, 0.15); } },
-          piep: { name: "Piep", desc: "kort dubbel piepen", play: function () { tone(1000, 0, 0.15, 0.34); tone(1000, 0.22, 0.15, 0.34); } },
-          gong: { name: "Beep", desc: "race countdown beep", play: function () { tone(1318, 0, 0.08, 0.5); tone(1568, 0.1, 0.08, 0.5); tone(2093, 0.2, 0.12, 0.5); } }
+          tingting: { name: "Tingting", desc: "heldere dubbele ting", play: function () { tone(1745, 0, 0.97, 1); tone(1745, 0.02, 0.97, 1); } },
+          piep: { name: "Piep", desc: "hoog dubbel piepen", play: function () { tone(1600, 0, 0.4, 0.4); tone(1800, 0.25, 0.4, 0.4); } },
+          gong: { name: "Beep", desc: "hoog race countdown", play: function () { tone(1900, 0, 0.3, 0.5); tone(2200, 0.15, 0.3, 0.5); tone(2600, 0.3, 0.3, 0.5); } }
         };
-        function notify() { (SOUNDS[settings.sound] || SOUNDS.bel).play(); }
-        function tick() { tone(1500, 0, 0.08, 0.4); }
-        function endBell() { tone(660, 0, 0.25, 0.5); tone(660, 0.3, 0.25, 0.5); tone(990, 0.6, 0.6, 0.5); }
+        function notify() { (SOUNDS[settings.sound] || SOUNDS.tingting).play(); }
+        function tick() { tone(1500, 0, 0.8, 0.4); }
+        function endBell() { 
+          tone(2000, 0, 0.1, 1); 
+          tone(2000, 0.15, 0.1, 1); 
+          tone(2000, 0.3, 0.1, 1); 
+          tone(2000, 0.45, 0.1, 1); 
+          tone(2500, 0.6, 0.5, 1); 
+        }
 
         /* ---------- state ---------- */
         function migrateWorkout(w) {
@@ -355,7 +372,7 @@
           return seeds();
         })();
         var settings = (function () {
-          var d = { volume: 0.8, sound: "bel", countStart: true, countEnd: true };
+          var d = { volume: 0.8, sound: "tingting", countStart: true, countEnd: true };
           try {
             var raw = localStorage.getItem(SKEY);
             if (raw) {
@@ -535,9 +552,9 @@
               '<div class="modal-content">' +
                 '<h3>Workouts herstellen</h3>' +
                 '<p><b>Let op:</b> Dit vervangt <b>alle</b> bestaande workouts door de workouts uit het backup bestand. Zorg dat je een recente backup hebt als je bestaande workouts wilt bewaren.</p>' +
+                '<p class="file-hint">Selecteer een .json backup bestand:</p>' +
                 '<div class="file-picker">' +
-                  '<label class="btn file-label" for="modalFileInput">Kies backup bestand (.json)</label>' +
-                  '<input type="file" id="modalFileInput" class="file-input" accept=".json" onchange="App.handleFileSelect(event)">' +
+                  '<input type="file" id="modalFileInput" accept=".json" onchange="App.handleFileSelect(event)">' +
                 '</div>' +
                 '<div class="modal-actions">' +
                   '<button class="btn" onclick="App.cancelImport()">Annuleren</button>' +
@@ -698,11 +715,11 @@
             '<span class="volval" id="volVal">' + Math.round(settings.volume * 100) + '%</span>' +
             '<button class="ibtn" title="Luister" onclick="App.testSound()">' + svgF(IC.play) + "</button></div></div>" +
             '<div class="setgroup"><div class="settitle">Meldingsgeluid</div><div class="sopts">';
-          var ids = ["bel", "piep", "beep"];
+          var ids = ["tingting", "piep", "gong"];
           for (var i = 0; i < ids.length; i++) {
             var id = ids[i];
-            var s = SOUNDS[id] || SOUNDS.gong;
-            var sel = settings.sound === id || (id === "beep" && settings.sound === "gong");
+            var s = SOUNDS[id];
+            var sel = settings.sound === id;
             html += '<button class="sopt' + (sel ? " sel" : "") + '" onclick="App.setSound(\'' + id + '\')">' +
               '<span class="stxt"><span class="sn">' + s.name + '</span><span class="sd">' + s.desc + "</span></span>" +
               (sel ? '<span class="check">&#10003;</span>' : "") + "</button>";
@@ -863,8 +880,8 @@
             if (lab) lab.textContent = Math.round(settings.volume * 100) + "%";
           },
           setSound: function (id) {
-            if (!SOUNDS[id] && id !== "beep") return;
-            settings.sound = (id === "beep" ? "gong" : id);
+            if (!SOUNDS[id]) return;
+            settings.sound = id;
             saveSettings();
             render();
             notify();
